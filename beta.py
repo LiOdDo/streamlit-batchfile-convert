@@ -45,12 +45,10 @@ param_path = "resource="+endpoint+"&lookups=" + lookup+"&fields="+fields+"&" + \
     params if params != None else "resource=" + \
     endpoint+"&lookups=" + lookup+"&fields="+fields
 #path = 'G:/My Drive/ds_working_python - BETA/source_file'
-test_pwd = json.dumps({
-  "username": "support",
-  "password": "Busy@pple53"
-})
+user_pwd = st.file_uploader(
+    "Please put your pwd")
 token = get_token(
-    "https://dataservicetracktik.guards.app/rest/v1/auth", test_pwd)
+    "https://dataservicetracktik.guards.app/rest/v1/auth", user_pwd)
 
 payload = {}
 headers = {
