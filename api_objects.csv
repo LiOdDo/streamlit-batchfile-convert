@@ -1,0 +1,117 @@
+﻿endpoint,lookup,fields,params_examples,data_prepare_config,_other fields1,_other fields2,_other fields3,_other lookups
+app-licenses,"account,name","name,number,account,position,user,lastLatitude,lastLongitude,startedOn,startedTime,status,applicationId,installationCode,id",,,,,,
+billing-adhoc-items,"account.name,contract.name,serviceDate","quantity,price,serviceDate,description,account.name,contract.name,billItem.name,taxClass.name",,,,,,
+bill-items,"name,region","name,isGlobal,region",,,,,,
+checkpoints,"name,account.customId","id,name,instructions,account.name,account.customId,account.id,siteLocation.name,scanActionType,scanReportTemplate.name,allowManualScan,scanCode,scanActionMessage,scanActionQuestion,scanActionMultiple,monitoringOption","account.name:contains=Australian National University - ES&name:in=Fenner Hall 102-159,Fenner Hall 102-160",,,,,
+checkpoint-tour-assignments,"checkpoint.account.customId,checkpoint.name,tour.name","checkpoint.name,checkpoint.account.customId,tour.name,tour.account.customId,sortOrder",,,,,,
+checkpoint-tours,"name,account.customId","name,specialInstructions,account.name,account.customId,account.type,position.name,gracePeriod,estimatedDuration,recurrenceType",,,,,,
+clients,"region.name,company","customId,company,type,region,parentClient.region,parentClient.customId,timeZone,address.addressLine1,address.city,address.state,address.country,address.postalCode",,"for item in d['operations']:
+    del item['data']['id']
+    del item['lookup']['id']
+    item['data']['region'] = 4
+    item['lookup']['region'] = 4
+    if item['data']['type'] != 'SERVICE_LOCATION':
+        del item['data']['parentClient']
+    if item['data']['address']['addressLine1'] == '':
+        del item['data']['address']
+    elif item['data']['address']['addressLine1'] != '':
+        if item['data']['address']['city'] == '':
+            item['data']['address']['city'] = ' '
+        if item['data']['address']['state'] == '':
+            item['data']['address']['state'] = ' '
+        if item['data']['address']['country'] == '':
+            item['data']['address']['country'] = ' '
+        if item['data']['address']['postalCode'] == '':
+            item['data']['address']['postalCode'] = ' '","id,customId,company,type,region,parentClient.region,parentClient.customId,firstName,lastName,jobTitle,primaryPhone,secondaryPhone,email,timeZone,address.addressLine1,address.city,address.state,address.country,address.postalCode","id,customId,company,type,region,parentClient,timeZone,region.timeZone",,
+contacts,"account.customId,firstName,lastName","account.customId,firstName,lastName",,,,,,
+contract-recurrent-fixed-services,"contract,serviceLocation.name,billItem.name,startDate,endDate,rate","contract.name,contract.account.name,serviceLocation.name,billItem.name,startDate,endDate,description,quantity,rate,frequency,taxClass.name,total,referenceDate,createdOn",,,,,,
+contracts,"id,account.name,account.region,name","name,account.name,id,createdOn,status,account.region,billingFrequencyType,billingStartDate,semiMonthlyFirstReferenceDay,semiMonthlySecondReferenceDay,paymentMethod,serviceStartDate,customId,billingFrequency,details,invoiceDayToAdd,paymentTerms,externalId,proposalNumber,estimatedPerPeriodRevenue,serviceEndDate,status,type,serviceTypes",,"for item in d['operations']:
+    del item['lookup']['id']
+    del item['data']['id']
+    del item['data']['status']
+    item['lookup']['account.region'] = 615
+    item['data']['account']['region'] = 615
+    for service in item['data']['serviceTypes']:
+        del service['id']
+        del service['contract']","id,account.customId,account.region,billingFrequencyType,billingStartDate,semiMonthlyFirstReferenceDay,semiMonthlySecondReferenceDay,name,paymentMethod,serviceStartDate,customId,billingFrequency,details,invoiceDayToAdd,paymentTerms,externalId,proposalNumber,estimatedPerPeriodRevenue,serviceEndDate,status,type,serviceTypes",,,
+dispatch-tasks,"client.customId,priceTier.account.customId,priceTier.name","customId,taskType.name,priority,taskInstructions,startedOn,endedOn,plannedDurationInMinutes,reminderInMinutes,alarmOrganization,client.customId,account,priceTier,status,active,assignedUser,assignedGroup,assignedVendor,reportTemplate.name,report.account,report,workflowInstance,location,locationType,notes",,,,,,
+employee-account-assignments,"employee,account,payRate","employee.customId,employee.region.name,account.region.name,account.customId,active,startedOn,endedOn",,,,,,
+employee-classes,"name,rate","name,rate",,,,,,
+employees,"region.name,customId","id,region,customId,firstName,lastName,jobTitle","for item in d['operations']:
+    del item['data']['id']
+    del item['lookup']['id']
+    item['data']['region'] = 4
+    item['lookup']['region'] = 4
+    item['data']['password'] = 'Track!1'
+    if item['data']['gender'] == '':
+        del item['data']['gender']
+    if item['data']['address']['addressLine1'] == '':
+        del item['data']['address']
+    elif item['data']['address']['addressLine1'] != '':
+        if item['data']['address']['city'] == '':
+            item['data']['address']['city'] = ' '
+        if item['data']['address']['state'] == '':
+            item['data']['address']['state'] = ' '
+        if item['data']['address']['country'] == '':
+            item['data']['address']['country'] = ' '
+        if item['data']['address']['postalCode'] == '':
+            item['data']['address']['postalCode'] = ' '","for item in d['operations']:
+    del item['data']['id']
+    del item['data']['employmentProfile']
+    del item['lookup']['id']
+    item['data']['region'] = 10129","region.name,id,customId,firstName,lastName,password,username,jobTitle,customId,primaryPhone,secondaryPhone,email,gender,birthday,address.addressLine1,address.city,address.country,address.state,address.postalCode",,,
+employee-skills,"employee,skill","employee,employee.region.name,skill.name,skill.region.name,skillDateLabelValue,expiryDate,skillLabel1,skillLabel1Value,skillLabel2,label2,skillLabel2Value",,,,,,
+employment-profiles,"id,employee.id","id,employee.id,employee.customId,employeeType,employeeClass.name,employmentDate,payRateType,hourlyRateType",,,,,,
+files,id,"url,tag,format,id",,,,,,
+geo-fences,account,"account.customId,account.name,account.type,description,geometryType,geometryCoordinates,access,radius",,,,,,
+holiday-groups,"region,name","region,name,summary,isDefault,resourceType",,,,,,
+holiday-recurrents,"code,label,id","id,code,label,region,dates",,,,,,
+message-board-post-categories,id,"id,name,tag,details",,,,,,
+mobile-runsheets,"name,zone.name,dayOfWeek","name,dayOfWeek,rangeStartTime,rangeEndTime,zonePosition.name,zone.name,zone.customId",,,,,,
+mobile-schedules,"client.customId,client.id,beginServiceOn,dayOfWeekStart,rangeStartTime","client.customId,client.id,zonePosition.customId,zonePosition.name,taskType.name,customId,details,mobileRunsheet.name,mobileRunsheet.dayOfWeek,beginServiceOn,endServiceOn,dayOfWeekStart,dayOfWeekEnd,rangeStartTime,rangeEndTime,durationMinutes,description",,,,,,
+position-billing-settings,"id,position","id,position,type,billItem,rate,discountRate,holidayGroup,billBreaks,holiday,holidayRate,holidayMultiplier,overtimeRule",,,"id,position.name,position.account.name,id,type,billItem,rate,holidayGroup,billBreaks,holiday,holidayRate,holidayMultiplier,priceMatrixRules",,,
+position-payroll-settings,"id,position","id,position,payPositionRate,positionHourlyRate,holiday,holidayRate,holidayMultiplier,holidayGroup,payCode,payBreaks",,,,,,
+positions,"account.customId,customId,name","name,description,customId,account.customId,account.name,contract.customId,nonBillable,billingSetting.type,billingSetting.billItem,billingSetting.rate,billingSetting.holidayGroup,billingSetting.billBreaks,billingSetting.holidayRate,billingSetting.billPremiums,payrollSetting.payPositionRate,payrollSetting.positionHourlyRate,payrollSetting.holidayRate,payrollSetting.holidayMultiplier,payrollSetting.holidayGroup,payrollSetting.payCode,payrollSetting.payBreaks,nonBillable,shiftMemo,beginDate,endDate,taxClass.name",," for item in d['operations']:
+     del item['lookup']['id']
+     del item['data']['id']
+     del item['data']['status']
+     del item['data']['serviceTypes'][0]['contract']
+     del item['data']['serviceTypes'][0]['id']
+     item['data']['account']['region'] = 6","id,name,description,customId,account.customId,account.name,contract.customId,billingSetting.type,billingSetting.billItem,billingSetting.rate,billingSetting.holidayGroup,billingSetting.billBreaks,billingSetting.holiday,billingSetting.holidayRate,billingSetting.billPremiums,payrollSetting.payPositionRate,payrollSetting.positionHourlyRate,payrollSetting.holiday,payrollSetting.holidayRate,payrollSetting.holidayMultiplier,payrollSetting.holidayGroup,payrollSetting.payCode,payrollSetting.payBreaks,nonBillable,shiftMemo,beginDate,endDate,taxClass.name","id,name,description,customId,account.customId,account.name,contract.customId,nonBillable,shiftMemo,beginDate,endDate,taxClass.name",,
+position-skills,"position,skill","id,position,skill,type",,,,,,
+post-orders,"subject.name,account.customId","subject.name,account.name,account.customId,details,version,acknowledgements,attachments",,,,,,
+regions,id,"name,customId,parentRegion.name,timeZone",,,,,,
+report-fields,id,"report,report.account.name,report.reportDateTime,report.createdBy.name,report.reportTemplate.name,templateField.label,valueLabel","report.account:in=1275,1276,1277,1278,1279,1280,1281,1282,1283,1284,1285,1289,1292,1293,1296,1298,1301,1302,1306,1421&report:between=410080,663499&flat=1&fields=report,report.account.name,report.reportDateTime,report.createdBy.name,report.reportTemplate.name,templateField.label,valueLabel&report.reportTemplate=15866",,,,,
+report-flag-categories,"name,region.name","name,region.name,customId,isGlobal",,,,,,
+report-flag-groups,"name,customId","name,customId",,,,,,
+report-flags,"id,customId","id,name,region.customId,region.name,details,showInDefaultGroup,severityLevel,customId,category.name,category.customId,isGlobal",,,"id,name,region.customId,region.name,details,showInDefaultGroup,severityLevel,customId,category.name,category.customId,alias.name,isGlobal,reportFlagGroups","name,region.customId,region.name,details,showInDefaultGroup,severityLevel,customId,category.name,category.customId,isGlobal",,
+reports,"id,reportTemplate.name,account.name,position.name,reportDateTime","id,reportTemplate.name,reportDateTime,submittedOn,account.name,position.name,approvedOn,status,approvedBy,reportFlag,siteLocation,geoLocation,uri,resourceType",,,"id,reportTemplate.name,reportDateTime,submittedOn,account.name,position.name,reportFields,approvedOn,status,approvedBy,checkpoint,reportFlag,siteLocation,geoLocation,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn",,,
+report-template-fields,"label,type,reportTemplate.name","label,type,displayOrder,extra,isDispatcherField,reportTemplate.name,confidential","for item in d['operations']:
+    if 'list' in item['data']:
+        del item['data']['list']",,,,,
+report-templates,"name,details","name,details,tag,reportFields,adminOnly",,,,,,
+role-permissions,"permission,role.name","permission,role.name",,,,,,
+roles,"name,account","name,description,portal,order,account,isGlobal","for item in d['operations']:
+    for permit in item['data']['permissions']:
+        del permit['role']",,,,,
+set-shiftTemplate-settings,id,"cycleDays,startDate",,,,,,
+shifts,"position.name,position.account.name,position.account.customId,startDateTime,endDateTime","id,billable,payable,paidTimeOff,position.name,position.account.name,position.account.customId,employee.customId,vacant,published,startsOn,endsOn,startDateTime,endDateTime,createdOn,modifiedOn,status,breakInMinutes",,,"id,position.account.name,position.account.customId,employee.customId,vacant,published,startsOn,endsOn,startDateTime,endDateTime,createdOn,modifiedOn,status,breakInMinutes",,,
+shift-templates,"position,beginDate,endDate,startDayIndex,startTime","id,position.account.name,position.name,position.customId,position.beginDate,beginDate,endDate,startTime,endTime,breakInMinutes,startDayIndex,startDayLabel,endDayIndex,endDayLabel,employee.name,employee.customId,vacant,onShiftBoard",,,,,,
+shift-template-settings,"client,cycleDays","client,cycleDays,startDate",,,,,,
+site-locations,"account.customId,name","account.region.name,account.customId,account.name,name,details,type",,,,,,
+site-tags,"region,id","region,id,tags",,,,,,
+skills,"region.name,name","region.name,name,category,dateLabel,label1,label2",,,,,,
+task-price-tiers,"name,customId,contract.customId,account.region,account.customId","name,id,customId,account.region,account.name,account.customId,contract.customId,contract.account.name,rate,instructions,serviceModel,chargeType,rateMatrix,effectiveDate,cancellationThresholdInMinutes",account.status=ACTIVE',"for item in d['operations']:
+    del item['data']['id']
+    item['lookup']['account.region'] = 4
+    item['data']['account']['region'] = 4",,,,
+task-site-instructions,"taskType,site,priceTier","taskType.name,taskType.id,site.id,site.name,priceTier.id,priceTier.name,id",,,,,,
+task-types,name,"name,dispatchable,schedulable,billable,prefix,active,reportTemplate.name",,,,,,
+tax-classes,"name,customId,region","name,customId,region,resourceType",,,,,,
+user-login-logs,user,"user.name,user.customId,user.account.name,loggedInOn,ip,method",,,,,,
+user-roles,"user.customId,role","user.customId,role.name",,,,,,
+vendors,id,"id,name,mainEmail,firstName,lastName,jobTitle",,,,,,
+workflow-instances,"currentStatus.name,workflow.name","currentStatus.name,workflow.name,modifiedOn,startedOn,dispatchTask.taskType.name",,,,,,
+workflows,"region.name,name","name,details,type,isGlobal,region.name",,,,,,
+workflow-statuses,"workflow.name,name","name,tag,workflow.name,formatBackgroundColor,formatTextColor,warningThresholdInMinutes,alertThresholdInMinutes",,,,,,
+zones,"region.customId,customId","region.customId,customId,name,address.addressLine1,address.addressLine2,address.city,address.state,address.country,address.postalCode,timeZone,allowedAreas,restrictedAreas",,,"region,id,customId,name,address.addressLine1,address.addressLine2,address.city,address.state,address.country,address.postalCode,timeZone,allowedAreas,restrictedAreas",,,
