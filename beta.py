@@ -48,7 +48,7 @@ param_path = "resource="+endpoint+"&lookups=" + lookup+"&fields="+fields+"&" + \
 user_pwd = st.file_uploader(
     "Please put your pwd")
 
-if uploaded_file is not None:
+if user_pwd is not None:
   
   token = get_token(
     "https://dataservicetracktik.guards.app/rest/v1/auth", user_pwd)
