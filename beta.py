@@ -23,7 +23,7 @@ def get_token(url, access):
         'Cookie': 'PHPSESSID=1gtjjjlkt2cm1jr4mgp2rsodqeegifg8'
     }
 
-    response = requests.request("POST", url, headers=headers, json=payload)
+    response = requests.request("POST", url, headers=headers, data=payload)
     token = response.json()['auth']['token']
 
     return token
