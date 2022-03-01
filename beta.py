@@ -47,32 +47,32 @@ param_path = "resource="+endpoint+"&lookups=" + lookup+"&fields="+fields+"&" + \
 #path = 'G:/My Drive/ds_working_python - BETA/source_file'
 user_pwd = st.file_uploader(
     "Please put your pwd")
-token = get_token(
+
+if uploaded_file is not None:
+  
+  token = get_token(
     "https://dataservicetracktik.guards.app/rest/v1/auth", user_pwd)
+  payload = {}
+  headers = {
+      'Authorization': 'Bearer '+token,
+      'Cookie': 'PHPSESSID=vqru8j08ho4oe1uaht3d6mikchqak2or'
+  }
 
-payload = {}
-headers = {
-    'Authorization': 'Bearer '+token,
-    'Cookie': 'PHPSESSID=vqru8j08ho4oe1uaht3d6mikchqak2or'
-}
+  response = requests.request(
+      "GET", "https://dataservicetracktik.guards.app/rest/v1/batch/file?" + param_path, headers=headers, data=payload)
 
-response = requests.request(
-    "GET", "https://dataservicetracktik.guards.app/rest/v1/batch/file?" + param_path, headers=headers, data=payload)
+  data = response.json()
 
-data = response.json()
-
-df = pd.json_normalize(data=data['operations']).filter(regex='^data.')
-df.columns = df.columns.str.replace("data.", "", regex=True)
-
-
-st.dataframe(df)
-
-st.download_button(
-    label="Download data as CSV",
-    data=df.to_csv(sep=',', encoding='utf-8', index=False),
-    file_name=f'{endpoint}-data-export.csv',
-    mime='text/csv',
-)
+  df = pd.json_normalize(data=data['operations']).filter(regex='^data.')
+  df.columns = df.columns.str.replace("data.", "", regex=True)
+  st.dataframe(df)
+  
+  st.download_button(
+      label="Download data as CSV",
+      data=df.to_csv(sep=',', encoding='utf-8', index=False),
+      file_name=f'{endpoint}-data-export.csv',
+      mime='text/csv',
+  )
 
 uploaded_file = st.file_uploader(
     "Please choose a XSL file to convert into BATCH import json file")
