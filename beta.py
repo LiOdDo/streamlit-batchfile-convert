@@ -51,7 +51,7 @@ user_pwd = st.file_uploader(
 if user_pwd is not None:
   
   token = get_token(
-    "https://dataservicetracktik.guards.app/rest/v1/auth", json.dumps(user_pwd))
+    "https://dataservicetracktik.guards.app/rest/v1/auth", f'{user_pwd})
   payload = {}
   headers = {
       'Authorization': 'Bearer '+token,
