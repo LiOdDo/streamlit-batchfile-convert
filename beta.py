@@ -44,7 +44,7 @@ lookup_list = lookup.split(",")
 param_path = "resource="+endpoint+"&lookups=" + lookup+"&fields="+fields+"&" + \
     params if params != None else "resource=" + \
     endpoint+"&lookups=" + lookup+"&fields="+fields
-path = 'G:/My Drive/ds_working_python - BETA/source_file'
+#path = 'G:/My Drive/ds_working_python - BETA/source_file'
 test_pwd = json.dumps({
   "username": "support",
   "password": "Busy@pple53"
