@@ -15,8 +15,9 @@ endpoint_selected = st.sidebar.text_input("Endpoints: ", 'regions')
 
 def get_token(url, access):
 
-    with open(access) as json_file:
-        payload = json.load(json_file)
+    #with open(access) as json_file:
+    #    payload = json.load(json_file)
+    payload = access
 
     headers = {
         'Content-Type': 'application/json',
