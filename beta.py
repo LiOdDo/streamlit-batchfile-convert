@@ -33,7 +33,7 @@ endpoint = endpoint_selected
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 params = None
 api_objects = pd.read_csv(
-    'G:/My Drive/ds_working_python/byoi_utility/api_objects.csv', dtype=str)
+    'api_objects.csv', dtype=str)
 
 #params = api_objects.loc[api_objects['endpoint'] == endpoint, 'params'].item()
 lookup = api_objects.loc[api_objects['endpoint']
@@ -45,9 +45,12 @@ param_path = "resource="+endpoint+"&lookups=" + lookup+"&fields="+fields+"&" + \
     params if params != None else "resource=" + \
     endpoint+"&lookups=" + lookup+"&fields="+fields
 path = 'G:/My Drive/ds_working_python - BETA/source_file'
-
+test_pwd = json.dumps({
+  "username": "support",
+  "password": "Busy@pple53"
+})
 token = get_token(
-    "https://dataservicetracktik.guards.app/rest/v1/auth", 'G:/My Drive/ds_working_python/source_file/auth/rootpwd.json')
+    "https://dataservicetracktik.guards.app/rest/v1/auth", test_pwd)
 
 payload = {}
 headers = {
