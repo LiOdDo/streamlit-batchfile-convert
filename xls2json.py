@@ -34,7 +34,7 @@ def build_import(template_file):
     source_to_import = {"onFailure": "ABORT", "operations": []}
     endpoint_list = pd.ExcelFile(template_file).sheet_names
     api_objects = pd.read_csv(
-        'G:/My Drive/ds_working_python/byoi_utility/api_objects.csv', dtype=str)
+        'api_objects.csv', dtype=str)
     for endpoint in endpoint_list:
         data_source = pd.read_excel(
             io=template_file,
