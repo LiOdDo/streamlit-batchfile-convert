@@ -3,7 +3,7 @@ import pandas as pd  # pip install pandas openpyxl
 import streamlit as st  # pip install streamlit
 import requests
 import json
-# from xls2json import build_import
+from xls2json import build_import
 
 # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="API BETA PLAYGROUND",
@@ -73,57 +73,7 @@ if user_pwd is not None:
 
 uploaded_file = st.file_uploader(
     "Please choose a XSL file to convert into BATCH import json file")
-def build_dict(data_source, row):
-    column = list(data_source.columns)
-    dict_temp = {}
-    for i in column:
-        if '.' in i:
-            key_parent = i[0:i.find('.')]
-            key_child = i[i.find('.')+1:len(i)]
-            if key_parent in dict_temp.keys():
-                dict_temp[f'{key_parent}'].update(
-                    {f'{key_child}': f"{data_source[f'{i}'][row]}"})
-            else:
-                dict_temp.update(
-                    {f'{key_parent}': {f'{key_child}': f"{data_source[f'{i}'][row]}"}})
-        else:
-            dict_temp.update({f"{i}": f"{data_source[f'{i}'][row]}"})
 
-    return dict_temp
-
-
-def build_lookup(lookuplist, data_source, row):
-    lookup_temp = {}
-    for i in lookuplist:
-        lookup_temp.update({f"{i}": f"{data_source[f'{i}'][row]}"})
-    return lookup_temp
-
-
-def build_import(template_file):
-    # from .import build_dict
-    source_to_import = {"onFailure": "ABORT", "operations": []}
-    endpoint_list = pd.ExcelFile(template_file).sheet_names
-    api_objects = pd.read_csv(
-        'api_objects.csv', dtype=str)
-    for endpoint_import in endpoint_list:
-        data_source = pd.read_excel(
-            io=template_file,
-            engine="xlrd",
-            sheet_name=f'{endpoint_import}',
-            dtype=str
-        )
-        lookup = api_objects.loc[api_objects['endpoint']
-                                 == endpoint_import, 'lookup'].item()
-        lookup_list = lookup.split(",")
-        data_source.fillna('', inplace=True)
-        total_source = len(data_source[data_source.columns[0]])
-        for i in range(total_source):
-            data_temp = build_dict(data_source, i)
-            lookup_temp = build_lookup(lookup_list, data_source, i)
-            source_to_import['operations'].append({'lookup': lookup_temp,
-                                                   'action': 'REPLACE', 'resource': f'{endpoint_import}',
-                                                   'data': data_temp})
-    return source_to_import
 if uploaded_file is not None:
     # To read file as bytes:
     bytes_data = build_import(uploaded_file)
