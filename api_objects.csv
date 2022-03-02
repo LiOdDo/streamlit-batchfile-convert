@@ -5,7 +5,7 @@ bill-items,"name,region","name,isGlobal,region",,,,,,
 checkpoints,"name,account.customId","id,name,instructions,account.name,account.customId,account.id,siteLocation.name,scanActionType,scanReportTemplate.name,allowManualScan,scanCode,scanActionMessage,scanActionQuestion,scanActionMultiple,monitoringOption","account.name:contains=Australian National University - ES&name:in=Fenner Hall 102-159,Fenner Hall 102-160",,,,,
 checkpoint-tour-assignments,"checkpoint.account.customId,checkpoint.name,tour.name","checkpoint.name,checkpoint.account.customId,tour.name,tour.account.customId,sortOrder",,,,,,
 checkpoint-tours,"name,account.customId","name,specialInstructions,account.name,account.customId,account.type,position.name,gracePeriod,estimatedDuration,recurrenceType",,,,,,
-clients,"region.name,company","customId,company,type,region,parentClient.region,parentClient.customId,timeZone,address.addressLine1,address.city,address.state,address.country,address.postalCode",,"for item in d['operations']:
+clients,"region.name,company","customId,company,type,region.name,parentClient.region,parentClient.customId,timeZone,address.addressLine1,address.city,address.state,address.country,address.postalCode",,"for item in d['operations']:
     del item['data']['id']
     del item['lookup']['id']
     item['data']['region'] = 4
@@ -23,7 +23,7 @@ clients,"region.name,company","customId,company,type,region,parentClient.region,
             item['data']['address']['country'] = ' '
         if item['data']['address']['postalCode'] == '':
             item['data']['address']['postalCode'] = ' '","id,customId,company,type,region,parentClient.region,parentClient.customId,firstName,lastName,jobTitle,primaryPhone,secondaryPhone,email,timeZone,address.addressLine1,address.city,address.state,address.country,address.postalCode","id,customId,company,type,region,parentClient,timeZone,region.timeZone",,
-contacts,"account.customId,firstName,lastName","account.customId,firstName,lastName",,,,,,
+contacts,"account.customId,firstName,lastName","account.customId,firstName,lastName,email",,,,,,
 contract-recurrent-fixed-services,"contract,serviceLocation.name,billItem.name,startDate,endDate,rate","contract.name,contract.account.name,serviceLocation.name,billItem.name,startDate,endDate,description,quantity,rate,frequency,taxClass.name,total,referenceDate,createdOn",,,,,,
 contracts,"id,account.name,account.region,name","name,account.name,id,createdOn,status,account.region,billingFrequencyType,billingStartDate,semiMonthlyFirstReferenceDay,semiMonthlySecondReferenceDay,paymentMethod,serviceStartDate,customId,billingFrequency,details,invoiceDayToAdd,paymentTerms,externalId,proposalNumber,estimatedPerPeriodRevenue,serviceEndDate,status,type,serviceTypes",,"for item in d['operations']:
     del item['lookup']['id']

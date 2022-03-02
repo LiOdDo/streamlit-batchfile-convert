@@ -33,8 +33,8 @@ def build_import(template_file):
     # from .import build_dict
     source_to_import = {"onFailure": "ABORT", "operations": []}
     endpoint_list = pd.ExcelFile(template_file).sheet_names
-    api_objects = pd.read_csv(
-        'api_objects.csv', dtype=str)
+#    api_objects = pd.read_csv(
+#        'api_objects.csv', dtype=str)
     for endpoint in endpoint_list:
         data_source = pd.read_excel(
             io=template_file,
@@ -42,9 +42,16 @@ def build_import(template_file):
             sheet_name=f'{endpoint}',
             dtype=str
         )
-        lookup = api_objects.loc[api_objects['endpoint']
-                                 == endpoint, 'lookup'].item()
-        lookup_list = lookup.split(",")
+        # lookup = api_objects.loc[api_objects['endpoint']
+        #                          == endpoint, 'lookup'].item()
+        # lookup_list = lookup.split(",")
+        lookup_list = []
+        for col in data_source.columns:
+            if "*" in col:
+                col = col.replace("*", "")
+                lookup_list.append(col)
+
+        data_source.columns = data_source.columns.str.replace("*", "")
         data_source.fillna('', inplace=True)
         total_source = len(data_source[data_source.columns[0]])
         for i in range(total_source):
