@@ -31,13 +31,21 @@ def build_lookup(lookuplist, data_source, row):
     return lookup_temp
 
 
-def build_import(lookup_list, template_file, endpoint):
+def convert_csv(template_file, endpoint):
     # from .import build_dict
 
     data_source = pd.read_csv(template_file, dtype=str)
     data_source.fillna('', inplace=True)
     source_to_import = {"onFailure": "ABORT",
                         "operations": []}
+    lookup_list = []
+    for col in data_source.columns:
+        if "*" in col:
+            col = col.replace("*", "")
+            lookup_list.append(col)
+
+    data_source.columns = data_source.columns.str.replace("*", "")
+    data_source.fillna('', inplace=True)
     total_source = len(data_source[data_source.columns[0]])
 
     for i in range(total_source):

@@ -1,117 +1,155 @@
-﻿endpoint,lookup,fields,params_examples,data_prepare_config,_other fields1,_other fields2,_other fields3,_other lookups
-app-licenses,"account,name","name,number,account,position,user,lastLatitude,lastLongitude,startedOn,startedTime,status,applicationId,installationCode,id",,,,,,
-billing-adhoc-items,"account.name,contract.name,serviceDate","quantity,price,serviceDate,description,account.name,contract.name,billItem.name,taxClass.name",,,,,,
-bill-items,"name,region","name,isGlobal,region",,,,,,
-checkpoints,"name,account.customId","id,name,instructions,account.name,account.customId,account.id,siteLocation.name,scanActionType,scanReportTemplate.name,allowManualScan,scanCode,scanActionMessage,scanActionQuestion,scanActionMultiple,monitoringOption","account.name:contains=Australian National University - ES&name:in=Fenner Hall 102-159,Fenner Hall 102-160",,,,,
-checkpoint-tour-assignments,"checkpoint.account.customId,checkpoint.name,tour.name","checkpoint.name,checkpoint.account.customId,tour.name,tour.account.customId,sortOrder",,,,,,
-checkpoint-tours,"name,account.customId","name,specialInstructions,account.name,account.customId,account.type,position.name,gracePeriod,estimatedDuration,recurrenceType",,,,,,
-clients,"region.name,company","customId,company,type,region.name,parentClient.region,parentClient.customId,timeZone,address.addressLine1,address.city,address.state,address.country,address.postalCode",,"for item in d['operations']:
-    del item['data']['id']
-    del item['lookup']['id']
-    item['data']['region'] = 4
-    item['lookup']['region'] = 4
-    if item['data']['type'] != 'SERVICE_LOCATION':
-        del item['data']['parentClient']
-    if item['data']['address']['addressLine1'] == '':
-        del item['data']['address']
-    elif item['data']['address']['addressLine1'] != '':
-        if item['data']['address']['city'] == '':
-            item['data']['address']['city'] = ' '
-        if item['data']['address']['state'] == '':
-            item['data']['address']['state'] = ' '
-        if item['data']['address']['country'] == '':
-            item['data']['address']['country'] = ' '
-        if item['data']['address']['postalCode'] == '':
-            item['data']['address']['postalCode'] = ' '","id,customId,company,type,region,parentClient.region,parentClient.customId,firstName,lastName,jobTitle,primaryPhone,secondaryPhone,email,timeZone,address.addressLine1,address.city,address.state,address.country,address.postalCode","id,customId,company,type,region,parentClient,timeZone,region.timeZone",,
-contacts,"account.customId,firstName,lastName","account.customId,firstName,lastName,email",,,,,,
-contract-recurrent-fixed-services,"contract,serviceLocation.name,billItem.name,startDate,endDate,rate","contract.name,contract.account.name,serviceLocation.name,billItem.name,startDate,endDate,description,quantity,rate,frequency,taxClass.name,total,referenceDate,createdOn",,,,,,
-contracts,"id,account.name,account.region,name","name,account.name,id,createdOn,status,account.region,billingFrequencyType,billingStartDate,semiMonthlyFirstReferenceDay,semiMonthlySecondReferenceDay,paymentMethod,serviceStartDate,customId,billingFrequency,details,invoiceDayToAdd,paymentTerms,externalId,proposalNumber,estimatedPerPeriodRevenue,serviceEndDate,status,type,serviceTypes",,"for item in d['operations']:
-    del item['lookup']['id']
-    del item['data']['id']
-    del item['data']['status']
-    item['lookup']['account.region'] = 615
-    item['data']['account']['region'] = 615
-    for service in item['data']['serviceTypes']:
-        del service['id']
-        del service['contract']","id,account.customId,account.region,billingFrequencyType,billingStartDate,semiMonthlyFirstReferenceDay,semiMonthlySecondReferenceDay,name,paymentMethod,serviceStartDate,customId,billingFrequency,details,invoiceDayToAdd,paymentTerms,externalId,proposalNumber,estimatedPerPeriodRevenue,serviceEndDate,status,type,serviceTypes",,,
-dispatch-tasks,"client.customId,priceTier.account.customId,priceTier.name","customId,taskType.name,priority,taskInstructions,startedOn,endedOn,plannedDurationInMinutes,reminderInMinutes,alarmOrganization,client.customId,account,priceTier,status,active,assignedUser,assignedGroup,assignedVendor,reportTemplate.name,report.account,report,workflowInstance,location,locationType,notes",,,,,,
-employee-account-assignments,"employee,account,payRate","employee.customId,employee.region.name,account.region.name,account.customId,active,startedOn,endedOn",,,,,,
-employee-classes,"name,rate","name,rate",,,,,,
-employees,"region.name,customId","id,region,customId,firstName,lastName,jobTitle","for item in d['operations']:
-    del item['data']['id']
-    del item['lookup']['id']
-    item['data']['region'] = 4
-    item['lookup']['region'] = 4
-    item['data']['password'] = 'Track!1'
-    if item['data']['gender'] == '':
-        del item['data']['gender']
-    if item['data']['address']['addressLine1'] == '':
-        del item['data']['address']
-    elif item['data']['address']['addressLine1'] != '':
-        if item['data']['address']['city'] == '':
-            item['data']['address']['city'] = ' '
-        if item['data']['address']['state'] == '':
-            item['data']['address']['state'] = ' '
-        if item['data']['address']['country'] == '':
-            item['data']['address']['country'] = ' '
-        if item['data']['address']['postalCode'] == '':
-            item['data']['address']['postalCode'] = ' '","for item in d['operations']:
-    del item['data']['id']
-    del item['data']['employmentProfile']
-    del item['lookup']['id']
-    item['data']['region'] = 10129","region.name,id,customId,firstName,lastName,password,username,jobTitle,customId,primaryPhone,secondaryPhone,email,gender,birthday,address.addressLine1,address.city,address.country,address.state,address.postalCode",,,
-employee-skills,"employee,skill","employee,employee.region.name,skill.name,skill.region.name,skillDateLabelValue,expiryDate,skillLabel1,skillLabel1Value,skillLabel2,label2,skillLabel2Value",,,,,,
-employment-profiles,"id,employee.id","id,employee.id,employee.customId,employeeType,employeeClass.name,employmentDate,payRateType,hourlyRateType",,,,,,
-files,id,"url,tag,format,id",,,,,,
-geo-fences,account,"account.customId,account.name,account.type,description,geometryType,geometryCoordinates,access,radius",,,,,,
-holiday-groups,"region,name","region,name,summary,isDefault,resourceType",,,,,,
-holiday-recurrents,"code,label,id","id,code,label,region,dates",,,,,,
-message-board-post-categories,id,"id,name,tag,details",,,,,,
-mobile-runsheets,"name,zone.name,dayOfWeek","name,dayOfWeek,rangeStartTime,rangeEndTime,zonePosition.name,zone.name,zone.customId",,,,,,
-mobile-schedules,"client.customId,client.id,beginServiceOn,dayOfWeekStart,rangeStartTime","client.customId,client.id,zonePosition.customId,zonePosition.name,taskType.name,customId,details,mobileRunsheet.name,mobileRunsheet.dayOfWeek,beginServiceOn,endServiceOn,dayOfWeekStart,dayOfWeekEnd,rangeStartTime,rangeEndTime,durationMinutes,description",,,,,,
-position-billing-settings,"id,position","id,position,type,billItem,rate,discountRate,holidayGroup,billBreaks,holiday,holidayRate,holidayMultiplier,overtimeRule",,,"id,position.name,position.account.name,id,type,billItem,rate,holidayGroup,billBreaks,holiday,holidayRate,holidayMultiplier,priceMatrixRules",,,
-position-payroll-settings,"id,position","id,position,payPositionRate,positionHourlyRate,holiday,holidayRate,holidayMultiplier,holidayGroup,payCode,payBreaks",,,,,,
-positions,"account.customId,customId,name","name,description,customId,account.customId,account.name,contract.customId,nonBillable,billingSetting.type,billingSetting.billItem,billingSetting.rate,billingSetting.holidayGroup,billingSetting.billBreaks,billingSetting.holidayRate,billingSetting.billPremiums,payrollSetting.payPositionRate,payrollSetting.positionHourlyRate,payrollSetting.holidayRate,payrollSetting.holidayMultiplier,payrollSetting.holidayGroup,payrollSetting.payCode,payrollSetting.payBreaks,nonBillable,shiftMemo,beginDate,endDate,taxClass.name",," for item in d['operations']:
-     del item['lookup']['id']
-     del item['data']['id']
-     del item['data']['status']
-     del item['data']['serviceTypes'][0]['contract']
-     del item['data']['serviceTypes'][0]['id']
-     item['data']['account']['region'] = 6","id,name,description,customId,account.customId,account.name,contract.customId,billingSetting.type,billingSetting.billItem,billingSetting.rate,billingSetting.holidayGroup,billingSetting.billBreaks,billingSetting.holiday,billingSetting.holidayRate,billingSetting.billPremiums,payrollSetting.payPositionRate,payrollSetting.positionHourlyRate,payrollSetting.holiday,payrollSetting.holidayRate,payrollSetting.holidayMultiplier,payrollSetting.holidayGroup,payrollSetting.payCode,payrollSetting.payBreaks,nonBillable,shiftMemo,beginDate,endDate,taxClass.name","id,name,description,customId,account.customId,account.name,contract.customId,nonBillable,shiftMemo,beginDate,endDate,taxClass.name",,
-position-skills,"position,skill","id,position,skill,type",,,,,,
-post-orders,"subject.name,account.customId","subject.name,account.name,account.customId,details,version,acknowledgements,attachments",,,,,,
-regions,id,"name,customId,parentRegion.name,timeZone",,,,,,
-report-fields,id,"report,report.account.name,report.reportDateTime,report.createdBy.name,report.reportTemplate.name,templateField.label,valueLabel","report.account:in=1275,1276,1277,1278,1279,1280,1281,1282,1283,1284,1285,1289,1292,1293,1296,1298,1301,1302,1306,1421&report:between=410080,663499&flat=1&fields=report,report.account.name,report.reportDateTime,report.createdBy.name,report.reportTemplate.name,templateField.label,valueLabel&report.reportTemplate=15866",,,,,
-report-flag-categories,"name,region.name","name,region.name,customId,isGlobal",,,,,,
-report-flag-groups,"name,customId","name,customId",,,,,,
-report-flags,"id,customId","id,name,region.customId,region.name,details,showInDefaultGroup,severityLevel,customId,category.name,category.customId,isGlobal",,,"id,name,region.customId,region.name,details,showInDefaultGroup,severityLevel,customId,category.name,category.customId,alias.name,isGlobal,reportFlagGroups","name,region.customId,region.name,details,showInDefaultGroup,severityLevel,customId,category.name,category.customId,isGlobal",,
-reports,"id,reportTemplate.name,account.name,position.name,reportDateTime","id,reportTemplate.name,reportDateTime,submittedOn,account.name,position.name,approvedOn,status,approvedBy,reportFlag,siteLocation,geoLocation,uri,resourceType",,,"id,reportTemplate.name,reportDateTime,submittedOn,account.name,position.name,reportFields,approvedOn,status,approvedBy,checkpoint,reportFlag,siteLocation,geoLocation,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn",,,
-report-template-fields,"label,type,reportTemplate.name","label,type,displayOrder,extra,isDispatcherField,reportTemplate.name,confidential","for item in d['operations']:
-    if 'list' in item['data']:
-        del item['data']['list']",,,,,
-report-templates,"name,details","name,details,tag,reportFields,adminOnly",,,,,,
-role-permissions,"permission,role.name","permission,role.name",,,,,,
-roles,"name,account","name,description,portal,order,account,isGlobal","for item in d['operations']:
-    for permit in item['data']['permissions']:
-        del permit['role']",,,,,
-set-shiftTemplate-settings,id,"cycleDays,startDate",,,,,,
-shifts,"position.name,position.account.name,position.account.customId,startDateTime,endDateTime","id,billable,payable,paidTimeOff,position.name,position.account.name,position.account.customId,employee.customId,vacant,published,startsOn,endsOn,startDateTime,endDateTime,createdOn,modifiedOn,status,breakInMinutes",,,"id,position.account.name,position.account.customId,employee.customId,vacant,published,startsOn,endsOn,startDateTime,endDateTime,createdOn,modifiedOn,status,breakInMinutes",,,
-shift-templates,"position,beginDate,endDate,startDayIndex,startTime","id,position.account.name,position.name,position.customId,position.beginDate,beginDate,endDate,startTime,endTime,breakInMinutes,startDayIndex,startDayLabel,endDayIndex,endDayLabel,employee.name,employee.customId,vacant,onShiftBoard",,,,,,
-shift-template-settings,"client,cycleDays","client,cycleDays,startDate",,,,,,
-site-locations,"account.customId,name","account.region.name,account.customId,account.name,name,details,type",,,,,,
-site-tags,"region,id","region,id,tags",,,,,,
-skills,"region.name,name","region.name,name,category,dateLabel,label1,label2",,,,,,
-task-price-tiers,"name,customId,contract.customId,account.region,account.customId","name,id,customId,account.region,account.name,account.customId,contract.customId,contract.account.name,rate,instructions,serviceModel,chargeType,rateMatrix,effectiveDate,cancellationThresholdInMinutes",account.status=ACTIVE',"for item in d['operations']:
-    del item['data']['id']
-    item['lookup']['account.region'] = 4
-    item['data']['account']['region'] = 4",,,,
-task-site-instructions,"taskType,site,priceTier","taskType.name,taskType.id,site.id,site.name,priceTier.id,priceTier.name,id",,,,,,
-task-types,name,"name,dispatchable,schedulable,billable,prefix,active,reportTemplate.name",,,,,,
-tax-classes,"name,customId,region","name,customId,region,resourceType",,,,,,
-user-login-logs,user,"user.name,user.customId,user.account.name,loggedInOn,ip,method",,,,,,
-user-roles,"user.customId,role","user.customId,role.name",,,,,,
-vendors,id,"id,name,mainEmail,firstName,lastName,jobTitle",,,,,,
-workflow-instances,"currentStatus.name,workflow.name","currentStatus.name,workflow.name,modifiedOn,startedOn,dispatchTask.taskType.name",,,,,,
-workflows,"region.name,name","name,details,type,isGlobal,region.name",,,,,,
-workflow-statuses,"workflow.name,name","name,tag,workflow.name,formatBackgroundColor,formatTextColor,warningThresholdInMinutes,alertThresholdInMinutes",,,,,,
-zones,"region.customId,customId","region.customId,customId,name,address.addressLine1,address.addressLine2,address.city,address.state,address.country,address.postalCode,timeZone,allowedAreas,restrictedAreas",,,"region,id,customId,name,address.addressLine1,address.addressLine2,address.city,address.state,address.country,address.postalCode,timeZone,allowedAreas,restrictedAreas",,,
+﻿endpoint,lookup,fields
+accounts,id,"name,customId,type,subType,address,region,notes,timeZone,status,positions,allowedAreas,restrictedAreas,ipWhitelist,id,uri,resourceType,avatar,createdBy,createdOn,updatedBy,updatedOn"
+addresses,id,"addressLine1,addressLine2,city,country,state,postalCode,latitude,longitude,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+app-licenses,id,"name,number,account,position,user,lastLatitude,lastLongitude,startedOn,status,applicationId,applicationVersion,deviceModel,deviceOS,deviceIMEI,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+back-office-settings,id,"region,scheduleCycleFirstDate,scheduleTemplateFirstDayOfWeek,schedulePreferredPublishFrequency,scheduleAllowForClosedBusinessDays,scheduleRequestEmployeeAcknowledge,scheduleMinimumRestPeriodBetweenShift,scheduleHolidayGroup,payrollHourlyRate,payrollSchedule,payrollOvertimeRule,payrollOvertimeDayOfWeek,payrollSorting,payrollSeparatePremium,billingTaxEngine,billingTaxClass,billingBaseCurrency,billingSeparatePremium,id,uri,resourceType"
+billable-items,id,"type,classModel,classModelId,quantity,rate,price,contract,taxClass,contractOccurrenceDate,invoice,invoiceLine,serviceLocation,clientAccount,postedOn,postBatchCustom,memo,region,billItem,statAmount,statType,priceTierModel,priceTierId,serviceDate,groupKey,billingNotes,subType,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+billing-adhoc-items,id,"status,price,quantity,serviceDate,description,account,contract,billItem,taxClass,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+bill-items,id,"name,customId,status,isGlobal,region,id,uri,resourceType"
+break-rule-compliance-logs,id,"shift,account,totalMinutesExpected,totalMinutesActual,totalMinutesStatus,totalBreaksExpected,totalBreaksActual,totalBreaksStatus,compliantCount,lateCount,earlyCount,missedCount,unscheduledCount,tooLongCount,tooShortCount,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+break-rule-conditions,id,"breakRule,type,duration,offsetType,offsetStart,offsetEnd,hasReminder,reminderMinutes,status,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+break-rule-exceptions,id,"type,actionDateTime,comment,summary,employee,shift,workSession,account,breakRule,condition,device,deviceAccount,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+break-rule-relations,id,"breakRule,relation,relationId,id,uri,resourceType"
+break-rules,id,"name,status,region,effectiveDate,conditions,positions,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+break-sessions,id,"startedOn,endedOn,initiationMethod,terminationMethod,status,workSession,type,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+checkpoint-question-answers,id,"question,questionIndex,answer,employee,scannedOn,checkpoint,id,uri,resourceType"
+checkpoints,id,"name,instructions,account,position,active,scanActionType,scanActionMessage,scanReportTemplate,scanActionQuestion,scanActionMultiple,monitoringOption,scanCode,allowManualScan,exceptionCategory,siteLocation,geoLocation,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+checkpoint-scans,id,"checkpoint,scannedBy,scannedOn,longitude,latitude,tourSession,id,uri,resourceType"
+checkpoint-tour-assignments,id,"checkpoint,tour,sortOrder,id,uri,resourceType"
+checkpoint-tours,id,"name,specialInstructions,account,position,status,gracePeriod,estimatedDuration,checkpoints,schedules,recurrenceType,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+checkpoint-tour-schedule-occurrences,id,"tour,tourDate,tourTime,occurrenceDateTime,id,uri,resourceType"
+checkpoint-tour-schedules,id,"tour,scheduledDayOfWeek,scheduledTime,id,uri,resourceType"
+checkpoint-tour-session-comments,id,"session,content,pictures,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+checkpoint-tour-sessions,id,"tour,performedBy,status,startedOn,endedOn,checkpointsTotal,checkpoints,checkpointsScannedTotal,checkpointsScans,checkpointsMissedTotal,checkpointsMissed,batchId,comments,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+cities,id,"name,province,state,country,uri,resourceType,id"
+client-billing-settings,id,"useMainAddress,billingAddress,distributeByMail,distributeByEmail,emailList,distributeByFax,faxNumber,client,taxClass,paymentTerm,taxExempt,taxExemptCode,distributionNote,invoicePermanentMemo,invoiceAttentionOf,flagForReview,id,uri,resourceType"
+clients,id,"name,company,customId,parentClient,firstName,lastName,jobTitle,primaryPhone,secondaryPhone,type,region,status,positions,address,notes,employeeAssignments,employeeBans,email,faxNumber,website,timeZone,tags,salesRepresentative,accountRepresentative,contacts,allowedAreas,restrictedAreas,zones,id,avatar,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+client-users,id,"client,customId,email,firstName,lastName,name,primaryPhone,secondaryPhone,status,username,avatar,id,createdBy,createdOn,updatedBy,updatedOn,uri,resourceType"
+comments,id,"comment,type,id,createdBy,createdOn,updatedBy,updatedOn"
+contacts,id,"firstName,lastName,jobTitle,primaryPhone,secondaryPhone,fax,email,address,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+contract-occurrence-logs,id,"status,occurrenceDate,invoice,contract,id,uri,resourceType"
+contract-occurrences,id,"id,contractId,occurrenceDate,status,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+contracts,id,"customId,account,billingFrequency,billingFrequencyType,billingStartDate,details,semiMonthlyFirstReferenceDay,semiMonthlySecondReferenceDay,invoiceDayToAdd,name,paymentMethod,paymentTerms,externalId,proposalNumber,estimatedPerPeriodRevenue,serviceEndDate,serviceStartDate,type,contractServiceModels,serviceTypes,occurrences,positions,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+contract-service-models,id,"name,serviceType,contract,settings,id,uri,resourceType"
+data-view-categories,id,"name,iconClass,parentCategory,ownedBy,archivedBy,aclRule,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+data-view-modular-hooks,id,"name,type,dataView,dataViewCategory,portal,contextFilter,contextFilterAttribute,settings,status,archivedOn,archivedBy,id,uri,resourceType"
+data-views,id,"is,name,title,status,description,uid,category,configs,ownedBy,archivedBy,aclRule,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+departments,id,"name,details,customId,region,status,employeeAssignments,positions,allowedAreas,restrictedAreas,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+dispatch-custom-locations,id,"dispatchTask,type,name,addressLine1,addressLine2,city,state,postalCode,country,autoGeoCode,latitude,longitude,region,uri,resourceType,id,createdBy,createdOn,updatedBy,updatedOn"
+dispatch-tasks,id,"customId,taskType,priority,taskInstructions,startedOn,endedOn,plannedDurationInMinutes,reminderInMinutes,alarmOrganization,client,priceTier,status,active,assignedUser,assignedGroup,assignedVendor,reportTemplate,report,workflowInstance,location,locationType,notes,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+employee-account-assignments,id,"employee,account,active,payRate,startedOn,endedOn,id,uri,resourceType"
+employee-account-bans,id,"employee,account,reason,startDate,id,createdBy,createdOn,updatedBy,updatedOn"
+employee-availabilities,id,"weekDay,timeFrom,timeTo,available,id,uri,resourceType"
+employee-classes,id,"status,name,rate,weeklyHoursMaximum,weeklyHoursMinimum,schedulingWeight,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+employee-roles,id,"employee,role,id,uri,resourceType"
+employees,id,"firstName,lastName,jobTitle,customId,region,primaryPhone,secondaryPhone,name,password,status,employmentProfile,gender,age,birthday,ageGroup,emergencyContacts,skills,notes,availabilities,accountAssignments,accountBans,email,address,username,tags,notificationSettings,id,uri,resourceType,avatar,createdBy,createdOn,updatedBy,updatedOn"
+employee-skills,id,"expiresOn,label1,label2,label3,skillCustomFields,comments,skill,employee,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+employment-profiles,id,"employee,employeeType,employeeClass,employmentDate,seniority,payRateType,hourlyRateType,hourlyRate,yearlyPayRate,overtimeExempt,payrollSchedule,hasGrievance,weeklyHoursTarget,weeklyHoursMaximum,weeklyHoursMinimum,overtimeRule,terminationDate,terminationReason,id,uri,resourceType"
+employment-termination-reasons,id,"name,isVoluntary,commentRequired,employmentProfiles,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+event-activities,id,"user,type,account,createdOn,id,createdBy,updatedBy,updatedOn"
+events-subscriptions,id,"customId,name,events,entityResponse,contextFilters,userDefinedFilters,url,secretHeaderName,secret,failureEmail,lastTriggeredOn,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+files,id,"url,tag,format,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+geo-fences,id,"account,description,geometryType,geometryCoordinates,access,radius,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+geo-locations,id,"latitude,longitude,accuracy,createdOn,createdBy,belongsTo,id,uri,resourceType"
+guid-resources,id,"guid,uri,resourceType,id"
+holiday-dates,id,"name,region,holidayDate,recurrent,id,uri,resourceType"
+holiday-date-to-classes,id,"class,date,recurrent,id,uri,resourceType"
+holiday-groups,id,"region,name,summary,isDefault,id,uri,resourceType"
+holiday-recurrents,id,"label,region,code,id,uri,resourceType"
+invoice-lines,id,"quantity,unitPrice,lineSubTotal,relationGuid,serviceLocation,serviceDateTime,taxClass,taxable,taxTotal,billableItems,invoice,id,uri,resourceType"
+invoice-line-taxes,id,"amount,taxClassItem,invoiceLine,id,uri,resourceType"
+invoices,id,"client,status,documentNumber,invoiceDate,dueDate,servicePeriodStartDate,servicePeriodEndDate,taxClass,contract,subTotal,taxTotal,total,lines,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+lone-worker-check-in-logs,id,"createdOn,checkInMethod,number,user,call,position,loneWorkerCheckIn,id,uri,resourceType"
+lone-worker-check-ins,id,"createdOn,status,shift,loneWorkerCheckInLog,id,uri,resourceType"
+lone-worker-check-in-tickets,id,"shift,employee,status,comments,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+lone-worker-phone-calls,id,"fromNumber,toNumber,createdOn,user,account,id,uri,resourceType"
+lone-worker-phones,id,"description,phone,account,id,uri,resourceType"
+lone-worker-schedule-check-ins,id,"weekDay,startTime,account,position,id,uri,resourceType"
+lone-worker-time-keeping-settings,id,"account,checkInEnabled,restrictPhoneNumber,lateAfterMinutes,automaticCheckInCall,loneWorkerPhones,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+master-service-types,id,"name,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+me,id,"firstName,lastName,jobTitle,customId,region,primaryPhone,secondaryPhone,name,password,status,employmentProfile,gender,age,birthday,ageGroup,emergencyContacts,skills,notes,availabilities,accountAssignments,accountBans,email,address,username,tags,notificationSettings,id,uri,resourceType,avatar,createdBy,createdOn,updatedBy,updatedOn"
+message-board-post-acknowledgements,id,"status,acknowledgedOn,employee,message,id,uri,resourceType"
+message-board-post-categories,id,"details,description,tag,messages,id,uri,resourceType"
+message-board-post-recipients,id,"tag,messageBoardPost,uri,resourceType,id"
+message-board-posts,id,"content,status,expireOn,account,category,recipients,messageBoardPostAcknowledgement,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+mobile-devices,id,"applicationId,name,number,account,position,user,lastLatitude,lastLongitude,startedOn,status,applicationVersion,deviceModel,deviceOS,deviceIMEI,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+mobile-runsheet-occurrences,id,"name,customId,dayOfWeek,rangeStartDateTime,rangeEndDateTime,occurrenceDate,zonePosition,zone,session,uri,resourceType,id"
+mobile-runsheets,id,"name,customId,dayOfWeek,rangeStartTime,rangeEndTime,zonePosition,zone,uri,resourceType,id"
+mobile-runsheet-sessions,id,"status,actionDate,periodDate,startedOn,endedOn,employee,mobileRunsheet,workSession,mobileScheduleOccurrenceLogs,uri,resourceType,id,createdBy,createdOn,updatedBy,updatedOn"
+mobile-schedule-occurrence-logs,id,"actionDate,status,lastStatusOn,onSiteOn,enRouteOn,completedOn,mobileRunsheetSession,mobileSchedule,mobileScheduleOccurrence,employee,report,mobileScheduleOccurrenceReassignments,uri,resourceType,id,createdBy,createdOn,updatedBy,updatedOn"
+mobile-schedule-occurrence-reassignments,id,"mobileRunsheetSession,mobileScheduleOccurrenceLog,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+mobile-schedule-occurrences,id,"customId,dayOfWeekStart,dayOfWeekEnd,occurrenceDate,rangeStartTime,rangeEndTime,durationMinutes,beginServiceOn,endServiceOn,description,details,mobileRunsheetSortOrder,rangeStartedDateTime,rangeEndedDateTime,taskType,mobileRunsheet,client,priceTier,zonePosition,reportTemplate,mobileScheduleOccurrenceLog,uri,resourceType,id,createdBy,createdOn,updatedBy,updatedOn"
+mobile-schedules,id,"customId,dayOfWeekStart,dayOfWeekEnd,rangeStartTime,rangeEndTime,durationMinutes,beginServiceOn,endServiceOn,description,details,mobileRunsheetSortOrder,taskType,mobileRunsheet,client,priceTier,zonePosition,reportTemplate,uri,resourceType,id,createdBy,createdOn,updatedBy,updatedOn"
+notes,id,"content,createdOn,createdBy,id,uri,resourceType,updatedBy,updatedOn"
+oauth2-access-tokens,id,"identifier,expiresOn,client,user,scopes,isRevoked,id,uri,resourceType"
+oauth2-auth-codes,id,"identifier,expiresOn,isRevoked,scopes,user,client,id,uri,resourceType"
+oauth2-clients,id,"identifier,secret,name,description,logo,active,redirectUris,grants,scopes,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+oauth2-refresh-tokens,id,"identifier,expiresOn,accessToken,isRevoked,id,uri,resourceType"
+open-shift-requests,id,"shift,requester,status,statusReason,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+overtime-rules,id,"name,id,uri,resourceType"
+payment-methods,id,"name,id,uri,resourceType"
+payroll-adhocs,id,"isOvertimeWeighted,id,account,employee,payrollCode,memo,eventDate,quantity,rate,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+payroll-codes,id,"name,isGlobal,code,type,region,multiplier,extraCharge,payable,impactsOvertime,billable,isAdhoc,isDeductable,id,uri,resourceType"
+payroll-deductions,id,"rate,id,account,employee,payrollCode,memo,eventDate,quantity,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+payroll-payrun-items,id,"payrun,employee,department,shift,account,payrollCode,payrollCodeLabel,quantity,rate,total,originType,originTypeItemId,label,notes,locked,shiftFragmentDateStart,shiftFragmentDateEnd,expenseDate,employeeType,companyCode,baseRate,payRateLevel,qualifier,id,uri,resourceType"
+payroll-payruns,id,"payrollSchedule,occurrenceDate,occurrenceStartDate,occurrenceEndDate,region,status,isProcessed,countEmployees,totalHours,totalCost,totalOvertimeCost,totalOvertimeHours,totalHolidayCost,totalHolidayHours,items,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+payroll-schedule-occurrences,id,"payrollSchedule,occurrenceDate,region,subRegionId,employees"
+payroll-schedules,id,"name,frequency,semiMonthlyFirstReferenceDay,semiMonthlySecondReferenceDay,isHolidayCountedInOvertime,holidaysAlignedWithPeriodStartTime,periodStartTime,periodStartDate,isGlobal,region,status,overlapingStrategy,holidayOverlapingStrategy,isOvertimeWeighted,multiplePayCodesStrategy,id,uri,resourceType"
+position-billing-settings,id,"position,type,billItem,rate,discountRate,holidayGroup,billBreaks,holiday,holidayRate,holidayMultiplier,overtimeRule,id,uri,resourceType"
+position-payroll-settings,id,"position,payPositionRate,positionHourlyRate,holiday,holidayRate,holidayMultiplier,holidayGroup,payCode,payBreaks,id,uri,resourceType"
+position-premiums,id,"status,type,code,name,amount,isOvertime,payCode,positions,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+positions,id,"name,description,customId,status,account,contract,nonBillable,shiftMemo,beginDate,endDate,breakRule,billingSetting,payrollSetting,taxClass,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+position-skills,id,"position,skill,type,comments,id"
+post-order-acknowledgements,id,"status,postOrder,employee,acknowledgedOn,id,uri,resourceType"
+post-orders,id,"subject,details,account,version,acknowledgements,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+post-order-subjects,id,"name,account,id,uri,resourceType"
+price-tiers,id,"name,customId,instructions,effectiveDate,validUntilDate,cancellationThresholdInMinutes,contract,taxClass,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+regions,id,"customId,name,company,firstName,lastName,primaryPhone,email,address,timeZone,parentRegion,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn,logo"
+report-fields,id,"report,templateField,value,valueLabel,archived,id,uri,resourceType"
+report-flag-categories,id,"name,customId,isGlobal,region,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+report-flag-group-assignments,id,"reportFlag,reportFlagGroup,id,uri,resourceType"
+report-flag-groups,id,"name,customId,reportFlags,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+report-flags,id,"name,details,guidReferenceId,showInDefaultGroup,severityLevel,customId,category,alias,isGlobal,region,reportFlagGroups,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+reports,id,"reportTemplate,reportDateTime,submittedOn,account,position,reportFields,approvedOn,status,approvedBy,checkpoint,reportFlag,siteLocation,geoLocation,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+report-template-fields,id,"label,name,type,required,adminOnly,displayOrder,extra,list,isDispatcherField,reportTemplate,confidential,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+report-templates,id,"name,details,reportFields,adminOnly,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+role-permissions,id,"permission,role,id,uri,resourceType"
+roles,id,"name,description,portal,order,account,permissions,id,uri,resourceType"
+schedule-off-periods,id,"startedOn,endedOn,description,employee,active,id,uri,resourceType"
+schedulers,id,"label,repeat,startDateTime,endDateTime,timeZone,every,weekDay,monthDay,yearDay,status,lastPerform,nextPerform,graceValueBefore,graceUnitBefore,graceValueAfter,graceUnitAfter,createUserId,updateUserId,createTime,updateTime,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+schedule-time-off-requests,id,"description,startOffPeriodDateTime,endOffPeriodDateTime,status,reason,reviewer,reviewedOn,type,employee,account,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+schedule-time-off-request-types,id,"name,payrollCode,paidTimeOff,hourly,salary,id,uri,resourceType"
+shift-logs,id,"changeType,shift,employee,createdBy,createdOn,note,shiftDetails,isValid,id,uri,resourceType"
+shift-notes,id,"content,createdOn,createdBy,type,shift,id,uri,resourceType"
+shift-proposal-queue-items,id,"viaSms,viaEmail,viaCall,shift,employee,sentOn,answeredOn,expiresOn,answer,status,email,smsNumber,callNumber,premiumType,premiumFixedAmount,premiumTopAmount,effectiveRate,distributionSequenceIndex,distributionType,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+shifts,id,"status,billable,vacant,onShiftBoard,startDateTime,startsOn,endDateTime,endsOn,breakInMinutes,published,employee,position,notes,modifiedOn,notified,acknowledged,locked,plannedDurationHours,plannedPayableHours,clockedHours,billableHours,payableHours,payRateLevel,payRate,attendanceStatus,workSessions,overtimeHours,paidAmount,billedAmount,holidayHours,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+shift-templates,id,"position,startTime,endTime,startDayIndex,startDayLabel,endDayIndex,endDayLabel,beginDate,endDate,employee,vacant,onShiftBoard,breakInMinutes,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+site-locations,id,"name,type,account,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+skill-categories,id,"customId,name,description,id,uri,resourceType"
+skills,id,"customId,category,name,dateLabel,label1,label2,label3,region,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+system-settings,id,"tag,value,domainFilter,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+system-usage-logs,id,"type,unit,logId,occurredOn,data,logDate,region,employee,id,uri,resourceType"
+task-price-tiers,id,"customId,name,account,contract,billItem,taxClass,chargeType,rate,rateMatrix,serviceModel,holiday,instructions,effectiveDate,validUntilDate,cancellationThresholdInMinutes,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+task-site-instructions,id,"taskType,site,jobInstructions,generalInstructions,checkPointTour,priceTier,id,uri,resourceType"
+task-site-settings,id,"generalInstructions,taskInstructions,id,uri,resourceType"
+task-types,id,"name,dispatchable,schedulable,billable,prefix,active,reportTemplate,priority,dispatchGroup,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+tax-classes,id,"name,customId,region,id,uri,resourceType"
+tax-class-items,id,"percentage,code,number,taxClass,id,uri,resourceType"
+twilio-accounts,id,"id,sid,token,uri,resourceType"
+user-login-logs,id,"user,loggedInOn,ip,userAgent,method,id,uri,resourceType"
+user-notification-settings,id,"communications,user,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+users,id,"firstName,lastName,name,primaryPhone,secondaryPhone,username,email,customId,account,status,type,lastLoggedInOn,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+vehicles,id,"name,region,make,model,ownershipType,color,status,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+vendors,id,"name,mainEmail,cities,serviceTypes,uri,resourceType,id,createdBy,createdOn,updatedBy,updatedOn,firstName,lastName,jobTitle,primaryPhone,secondaryPhone,avatar"
+whitelisted-ips,id,"ip,label,account,id,uri,resourceType"
+workflow-instance-logs,id,"status,user,createdOn,workflowInstance,id,uri,resourceType"
+workflow-instances,id,"currentStatus,workflow,modifiedOn,startedOn,logs,dispatchTask,id,uri,resourceType"
+workflows,id,"name,statuses,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+workflow-statuses,id,"name,formatBackgroundColor,formatTextColor,warningThresholdInMinutes,alertThresholdInMinutes,id,uri,resourceType"
+work-sessions,id,"startedOn,endedOn,initiationMethod,terminationMethod,status,employee,shift,durationHours,position,account,breaks,initiationPhoneNumber,terminationPhoneNumber,mobileDevice,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+zones,id,"name,description,customId,address,region,status,clients,positions,allowedAreas,restrictedAreas,timeZone,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+oauth2-refresh-tokens,id,"identifier,expiresOn,accessToken,isRevoked,id,uri,resourceType"
+oauth2-auth-codes,id,"identifier,expiresOn,isRevoked,scopes,user,client,id,uri,resourceType"
+whitelisted-ips,id,"ip,label,account,id,uri,resourceType"
+user-notification-settings,id,"communications,user,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
+report-flag-group-assignments,id,"reportFlag,reportFlagGroup,id,uri,resourceType"
