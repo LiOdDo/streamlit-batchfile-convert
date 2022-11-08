@@ -53,6 +53,27 @@ def export_data(endpoint, user_pwd, url_input):
     return df
 
 
+def tql_data(user_pwd, url_input, tql_query):
+
+    token = get_token(
+        f"{url_input}rest/v1/auth", user_pwd)
+
+    payload = {}
+    headers = {
+        'Authorization': 'Bearer '+token,
+        'Cookie': 'PHPSESSID=vqru8j08ho4oe1uaht3d6mikchqak2or'
+    }
+
+    response = requests.request(
+        "GET", f"{url_input}rest/v1/tql?tql=" + tql_query, headers=headers, data=payload)
+
+    data = response.json()
+
+    df = pd.json_normalize(data=data['data'])
+
+    return df
+
+
 def import_data(url_input, user_pwd, file_to_import):
     token = get_token(
         f"{url_input}rest/v1/auth", user_pwd)

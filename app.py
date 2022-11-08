@@ -5,7 +5,7 @@ import requests
 import json
 from xlsx2json import convert_xlsx
 from csv2json import convert_csv
-from services_api import get_token, export_data, import_data
+from services_api import get_token, export_data, tql_data, import_data
 
 # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="API BETA PLAYGROUND",
@@ -25,14 +25,19 @@ user_pwd = st.sidebar.file_uploader(
 #         "password": f"{password}"
 #     }
 # )
+endpoint_options = list(pd.read_csv(
+    'api_objects.csv', dtype=str)['endpoint'])
+tql_options = pd.read_csv(
+    'data-tql-collections.csv', dtype=str)
+tql_endpoint_options = tql_options['tql_resource']
 
-st.sidebar.subheader("Please Add Endpoint Here:")
-endpoint_selected = st.sidebar.text_input("Endpoints: ", 'regions')
+st.sidebar.subheader("Please Choose Endpoint:")
+endpoint_selected = st.sidebar.selectbox("Endpoints: ", endpoint_options)
 endpoint = endpoint_selected
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
-    "Please select one from followings", ["intro", "data exports", "xlsx/csv to json conversion", "data imports"])
+    "Please select one from followings", ["intro", "data exports", "TQL", "xlsx/csv to json conversion", "data imports"])
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
@@ -63,6 +68,27 @@ if services_selected == "data exports":
             mime='text/csv',
         )
 
+if services_selected == "TQL":
+    if user_pwd is not None:
+        st.subheader(f"TQL Query Services")
+        query_endpoint = st.selectbox(
+            "Available Queries: ", tql_endpoint_options)
+        sample_query = tql_options.loc[tql_options['tql_resource']
+                                       == query_endpoint, 'TQL'].iloc[0]
+        tql_query = st.text_area(
+            label="Please Type Query Here: ", value=sample_query, height=None)
+
+        if len(tql_query) > 0:
+            df = tql_data(user_pwd, url_input, tql_query)
+            st.text(f"The QUERY data: ")
+            st.dataframe(df)
+
+            st.download_button(
+                label="Download data as CSV",
+                data=df.to_csv(sep=',', encoding='utf-8', index=False),
+                file_name=f'QUER-data-export.csv',
+                mime='text/csv',
+            )
 
 if services_selected == "xlsx/csv to json conversion":
     st.subheader("Batch Import File Convert Services - **_xlsx2json_**")
