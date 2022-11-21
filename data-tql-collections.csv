@@ -1,5 +1,5 @@
 ﻿tql_resource,TQL
-region,"SELECT name,customId, parentRegion.name,parentRegion.customId, timeZone FROM regions"
+region_export,"SELECT name,customId, parentRegion.name,parentRegion.customId, timeZone FROM regions"
 bill_items,"SELECT name,customId, region.name, isGlobal FROM bill_items"
 holiday_groups,"SELECT name,region.name,isGlobal FROM holiday_groups"
 roles,"SELECT name, portal,  region.name,isGlobal  FROM roles"
