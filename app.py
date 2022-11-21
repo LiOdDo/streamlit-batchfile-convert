@@ -16,6 +16,11 @@ url_input = st.sidebar.text_input(
     "Please add the portal URL (include the ending /): ", '')
 user_pwd = st.sidebar.file_uploader(
     "Please upload your binary format user and password file")
+
+if user_pwd is not None:
+    if url_input is not None:
+        token = get_token(
+            f"{url_input}rest/v1/auth", user_pwd)
 #username = st.sidebar.text_input("Enter username")
 #password = st.sidebar.text_input("Enter a password", type="password")
 
@@ -37,7 +42,7 @@ endpoint = endpoint_selected
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
-    "Please select one from followings", ["intro", "data exports", "TQL", "xlsx/csv to json conversion", "data imports"])
+    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "xlsx/csv to json conversion", "data imports"])
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
@@ -57,7 +62,7 @@ if services_selected == "intro":
 if services_selected == "data exports":
     if user_pwd is not None:
         st.subheader(f"Data Export Services")
-        df = export_data(endpoint, user_pwd, url_input)
+        df = export_data(endpoint, token, url_input)
         st.text(f"The {endpoint} data: ")
         st.dataframe(df)
 
@@ -79,7 +84,7 @@ if services_selected == "TQL":
             label="Please Type Query Here: ", value=sample_query, height=None)
 
         if len(tql_query) > 0:
-            df = tql_data(user_pwd, url_input, tql_query)
+            df = tql_data(token, url_input, tql_query)
             st.text(f"The QUERY data: ")
             st.dataframe(df)
 
@@ -89,6 +94,54 @@ if services_selected == "TQL":
                 file_name=f'QUER-data-export.csv',
                 mime='text/csv',
             )
+
+if services_selected == "TQL Table Join Service":
+
+    st.subheader(f"TQL table1")
+    query_endpoint1 = st.selectbox(
+        "Available Queries: ", tql_endpoint_options, key="0001221a")
+    sample_query1 = tql_options.loc[tql_options['tql_resource']
+                                    == query_endpoint1, 'TQL'].iloc[0]
+    tql_query1 = st.text_area(
+        label="Please Type Query Here: ", height=None, value=sample_query1, key="0001223a")
+
+    if len(tql_query1) > 0:
+        df1 = tql_data(token, url_input, tql_query1)
+        option1 = st.text(f"The QUERY data 1: ")
+        st.dataframe(df1, 2000, 200)
+
+    st.subheader(f"TQL table2")
+    query_endpoint2 = st.selectbox(
+        "Available Queries: ", tql_endpoint_options, key="0001221b")
+    sample_query2 = tql_options.loc[tql_options['tql_resource']
+                                    == query_endpoint2, 'TQL'].iloc[0]
+    tql_query2 = st.text_area(
+        label="Please Type Query Here: ", height=None, value=sample_query2, key="0001223b")
+
+    if len(tql_query2) > 0:
+        df2 = tql_data(token, url_input, tql_query2)
+        option2 = st.text(f"The QUERY data 2: ")
+        st.dataframe(df2, 2000, 200)
+
+    st.subheader(f"Table1 Join Table2")
+    if df1 is not None:
+        if df2 is not None:
+            table1_key = st.selectbox("key1", df1.columns, key="0001224a")
+            table2_key = st.selectbox("key2", df2.columns, key="0001224b")
+            submit = st.button('Join The Tables')
+            if submit:
+                joined_data = pd.merge(
+                    df1, df2, left_on=table1_key, right_on=table2_key, how='left')
+                st.text(f"The joined data is: ")
+                st.dataframe(joined_data, 2000, 200)
+                st.download_button(
+                    label="Download data as CSV",
+                    data=joined_data.to_csv(
+                        sep=',', encoding='utf-8', index=False),
+                    file_name=f'Joined-data-export.csv',
+                    mime='text/csv',
+                )
+
 
 if services_selected == "xlsx/csv to json conversion":
     st.subheader("Batch Import File Convert Services - **_xlsx2json_**")
@@ -130,7 +183,7 @@ if services_selected == "data imports":
     if file_to_import is not None:
         submit = st.button('Import Selected File')
         if submit:
-            data = import_data(url_input, user_pwd, file_to_import)
+            data = import_data(url_input, token, file_to_import)
             st.text(f"The {file_to_import.name} import result is: ")
             st.write(data)
 

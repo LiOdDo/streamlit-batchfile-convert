@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import json
+import streamlit as st
 
 
 def get_token(url, access):
@@ -18,7 +19,7 @@ def get_token(url, access):
     return token
 
 
-def export_data(endpoint, user_pwd, url_input):
+def export_data(endpoint, token, url_input):
     params = None
     api_objects = pd.read_csv(
         'api_objects.csv', dtype=str)
@@ -33,8 +34,8 @@ def export_data(endpoint, user_pwd, url_input):
         params if params != None else "resource=" + \
         endpoint+"&lookups=" + lookup+"&fields="+fields
 
-    token = get_token(
-        f"{url_input}rest/v1/auth", user_pwd)
+#    token = get_token(
+#        f"{url_input}rest/v1/auth", user_pwd)
 
     payload = {}
     headers = {
@@ -53,10 +54,10 @@ def export_data(endpoint, user_pwd, url_input):
     return df
 
 
-def tql_data(user_pwd, url_input, tql_query):
+def tql_data(token, url_input, tql_query):
 
-    token = get_token(
-        f"{url_input}rest/v1/auth", user_pwd)
+    #    token = get_token(
+    #        f"{url_input}rest/v1/auth", user_pwd)
 
     payload = {}
     headers = {
@@ -74,9 +75,27 @@ def tql_data(user_pwd, url_input, tql_query):
     return df
 
 
-def import_data(url_input, user_pwd, file_to_import):
-    token = get_token(
-        f"{url_input}rest/v1/auth", user_pwd)
+'''
+def tql_table(self):
+
+    with st.form("TQL1", clear_on_submit=True):
+        TQL_Table_1 = st.text_area("enter tql1")
+
+        submit = st.form_submit_button("run tql1")
+    with st.form("TQL2", clear_on_submit=True):
+        TQL_Table_2 = st.text_area("enter tql2")
+
+        submit = st.form_submit_button("run tql2")
+    with st.form("TQL3", clear_on_submit=True):
+        TQL_Table_3 = st.text_area("enter tql3")
+
+        submit = st.form_submit_button("run tql3")
+'''
+
+
+def import_data(url_input, token, file_to_import):
+    #    token = get_token(
+    #        f"{url_input}rest/v1/auth", user_pwd)
 
     payload = json.load(file_to_import)
 
