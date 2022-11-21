@@ -132,7 +132,7 @@ if services_selected == "TQL Table Join Service":
         option2 = st.text(f"The QUERY data 2: ")
         st.dataframe(df2, 2000, 200)
 
-    st.subheader(f"Table1 Join Table2")
+    st.subheader(f"LEFT JOIN Table1 AND Table2")
     if df1 is not None:
         if df2 is not None:
             table1_key = st.selectbox("key1", df1.columns, key="0001224a")
