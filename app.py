@@ -17,10 +17,10 @@ url_input = st.sidebar.text_input(
 user_pwd = st.sidebar.file_uploader(
     "Please upload your binary format user and password file")
 
-if user_pwd is not None:
-    if url_input is not None:
-        token = get_token(
-            f"{url_input}rest/v1/auth", user_pwd)
+# if user_pwd is not None:
+#    if url_input is not None:
+#        token = get_token(
+# S            f"{url_input}rest/v1/auth", user_pwd)
 #username = st.sidebar.text_input("Enter username")
 #password = st.sidebar.text_input("Enter a password", type="password")
 
@@ -62,7 +62,7 @@ if services_selected == "intro":
 if services_selected == "data exports":
     if user_pwd is not None:
         st.subheader(f"Data Export Services")
-        df = export_data(endpoint, token, url_input)
+        df = export_data(endpoint, user_pwd, url_input)
         st.text(f"The {endpoint} data: ")
         st.dataframe(df)
 
@@ -74,7 +74,12 @@ if services_selected == "data exports":
         )
 
 if services_selected == "TQL":
+
     if user_pwd is not None:
+        if url_input is not None:
+            token = get_token(
+                f"{url_input}rest/v1/auth", user_pwd)
+
         st.subheader(f"TQL Query Services")
         query_endpoint = st.selectbox(
             "Available Queries: ", tql_endpoint_options)
@@ -96,6 +101,10 @@ if services_selected == "TQL":
             )
 
 if services_selected == "TQL Table Join Service":
+    if user_pwd is not None:
+        if url_input is not None:
+            token = get_token(
+                f"{url_input}rest/v1/auth", user_pwd)
 
     st.subheader(f"TQL table1")
     query_endpoint1 = st.selectbox(
@@ -183,7 +192,7 @@ if services_selected == "data imports":
     if file_to_import is not None:
         submit = st.button('Import Selected File')
         if submit:
-            data = import_data(url_input, token, file_to_import)
+            data = import_data(url_input, user_pwd, file_to_import)
             st.text(f"The {file_to_import.name} import result is: ")
             st.write(data)
 
