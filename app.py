@@ -106,31 +106,34 @@ if services_selected == "TQL Table Join Service":
             token = get_token(
                 f"{url_input}rest/v1/auth", user_pwd)
 
-    st.subheader(f"TQL table1")
-    query_endpoint1 = st.selectbox(
-        "Available Queries: ", tql_endpoint_options, key="0001221a")
-    sample_query1 = tql_options.loc[tql_options['tql_resource']
-                                    == query_endpoint1, 'TQL'].iloc[0]
-    tql_query1 = st.text_area(
-        label="Please Type Query Here: ", height=None, value=sample_query1, key="0001223a")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader(f"TQL table1")
+        query_endpoint1 = st.selectbox(
+            "Available Queries: ", tql_endpoint_options, key="0001221a")
+        sample_query1 = tql_options.loc[tql_options['tql_resource']
+                                        == query_endpoint1, 'TQL'].iloc[0]
+        tql_query1 = st.text_area(
+            label="Please Type Query Here: ", height=None, value=sample_query1, key="0001223a")
 
-    if len(tql_query1) > 0:
-        df1 = tql_data(token, url_input, tql_query1)
-        option1 = st.text(f"The QUERY data 1: ")
-        st.dataframe(df1, 2000, 200)
+        if len(tql_query1) > 0:
+            df1 = tql_data(token, url_input, tql_query1)
+            option1 = st.text(f"The QUERY data 1: ")
+            st.dataframe(df1, 2000, 200)
 
-    st.subheader(f"TQL table2")
-    query_endpoint2 = st.selectbox(
-        "Available Queries: ", tql_endpoint_options, key="0001221b")
-    sample_query2 = tql_options.loc[tql_options['tql_resource']
-                                    == query_endpoint2, 'TQL'].iloc[0]
-    tql_query2 = st.text_area(
-        label="Please Type Query Here: ", height=None, value=sample_query2, key="0001223b")
+    with col2:
+        st.subheader(f"TQL table2")
+        query_endpoint2 = st.selectbox(
+            "Available Queries: ", tql_endpoint_options, key="0001221b")
+        sample_query2 = tql_options.loc[tql_options['tql_resource']
+                                        == query_endpoint2, 'TQL'].iloc[0]
+        tql_query2 = st.text_area(
+            label="Please Type Query Here: ", height=None, value=sample_query2, key="0001223b")
 
-    if len(tql_query2) > 0:
-        df2 = tql_data(token, url_input, tql_query2)
-        option2 = st.text(f"The QUERY data 2: ")
-        st.dataframe(df2, 2000, 200)
+        if len(tql_query2) > 0:
+            df2 = tql_data(token, url_input, tql_query2)
+            option2 = st.text(f"The QUERY data 2: ")
+            st.dataframe(df2, 2000, 200)
 
     st.subheader(f"JOIN Table1 AND Table2")
     if df1 is not None:
