@@ -138,10 +138,14 @@ if services_selected == "TQL Table Join Service":
     st.subheader(f"JOIN Table1 AND Table2")
     if df1 is not None:
         if df2 is not None:
-            table1_key = st.selectbox("key1", df1.columns, key="0001224a")
-            table2_key = st.selectbox("key2", df2.columns, key="0001224b")
-            table3_join = st.selectbox(
-                "join method", ["left", "right", "outer", "inner", "cross"], key="0001224c")
+            key1, key2, key3, key4, key5 = st.columns(5)
+            with key1:
+                table1_key = st.selectbox("key1", df1.columns, key="0001224a")
+            with key2:
+                table3_join = st.selectbox(
+                    "join method", ["left", "right", "outer", "inner", "cross"], key="0001224c")
+            with key3:
+                table2_key = st.selectbox("key2", df2.columns, key="0001224b")
             submit = st.button('Join The Tables')
             if submit:
                 joined_data = pd.merge(
