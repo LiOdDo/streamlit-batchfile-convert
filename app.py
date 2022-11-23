@@ -106,59 +106,62 @@ if services_selected == "TQL Table Join Service":
             token = get_token(
                 f"{url_input}rest/v1/auth", user_pwd)
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader(f"TQL table1")
-        query_endpoint1 = st.selectbox(
-            "Available Queries: ", tql_endpoint_options, key="0001221a")
-        sample_query1 = tql_options.loc[tql_options['tql_resource']
-                                        == query_endpoint1, 'TQL'].iloc[0]
-        tql_query1 = st.text_area(
-            label="Please Type Query Here: ", height=None, value=sample_query1, key="0001223a")
+            col1, col2 = st.columns(2)
+            with col1:
+                st.subheader(f"TQL table1")
+                query_endpoint1 = st.selectbox(
+                    "Available Queries: ", tql_endpoint_options, key="0001221a")
+                sample_query1 = tql_options.loc[tql_options['tql_resource']
+                                                == query_endpoint1, 'TQL'].iloc[0]
+                tql_query1 = st.text_area(
+                    label="Please Type Query Here: ", height=None, value=sample_query1, key="0001223a")
 
-        if len(tql_query1) > 0:
-            df1 = tql_data(token, url_input, tql_query1)
-            option1 = st.text(f"The QUERY data 1: ")
-            st.dataframe(df1, 2000, 200)
+                if len(tql_query1) > 0:
+                    df1 = tql_data(token, url_input, tql_query1)
+                    option1 = st.text(f"The QUERY data 1: ")
+                    st.dataframe(df1, 2000, 200)
 
-    with col2:
-        st.subheader(f"TQL table2")
-        query_endpoint2 = st.selectbox(
-            "Available Queries: ", tql_endpoint_options, key="0001221b")
-        sample_query2 = tql_options.loc[tql_options['tql_resource']
-                                        == query_endpoint2, 'TQL'].iloc[0]
-        tql_query2 = st.text_area(
-            label="Please Type Query Here: ", height=None, value=sample_query2, key="0001223b")
+            with col2:
+                st.subheader(f"TQL table2")
+                query_endpoint2 = st.selectbox(
+                    "Available Queries: ", tql_endpoint_options, key="0001221b")
+                sample_query2 = tql_options.loc[tql_options['tql_resource']
+                                                == query_endpoint2, 'TQL'].iloc[0]
+                tql_query2 = st.text_area(
+                    label="Please Type Query Here: ", height=None, value=sample_query2, key="0001223b")
 
-        if len(tql_query2) > 0:
-            df2 = tql_data(token, url_input, tql_query2)
-            option2 = st.text(f"The QUERY data 2: ")
-            st.dataframe(df2, 2000, 200)
+                if len(tql_query2) > 0:
+                    df2 = tql_data(token, url_input, tql_query2)
+                    option2 = st.text(f"The QUERY data 2: ")
+                    st.dataframe(df2, 2000, 200)
 
-    st.subheader(f"JOIN Table1 AND Table2")
-    if df1 is not None:
-        if df2 is not None:
-            key1, key2, key3, key4, key5 = st.columns(5)
-            with key1:
-                table1_key = st.selectbox("key1", df1.columns, key="0001224a")
-            with key2:
-                table3_join = st.selectbox(
-                    "join method", ["left", "right", "outer", "inner", "cross"], key="0001224c")
-            with key3:
-                table2_key = st.selectbox("key2", df2.columns, key="0001224b")
-            submit = st.button('Join The Tables')
-            if submit:
-                joined_data = pd.merge(
-                    df1, df2, left_on=table1_key, right_on=table2_key, how=table3_join)
-                st.text(f"The joined data is: ")
-                st.dataframe(joined_data, 2000, 200)
-                st.download_button(
-                    label="Download data as CSV",
-                    data=joined_data.to_csv(
-                        sep=',', encoding='utf-8', index=False),
-                    file_name=f'Joined-data-export.csv',
-                    mime='text/csv',
-                )
+            st.subheader(f"JOIN Table1 AND Table2")
+            if df1 is not None:
+                if df2 is not None:
+                    key1, key2, key3, key4, key5 = st.columns(5)
+                    with key1:
+                        table1_key = st.selectbox(
+                            "key1", df1.columns, key="0001224a")
+                    with key2:
+                        table3_join = st.selectbox(
+                            "join method", ["left", "right", "outer", "inner", "cross"], key="0001224c")
+                    with key3:
+                        table2_key = st.selectbox(
+                            "key2", df2.columns, key="0001224b")
+                    submit = st.button('Join The Tables')
+                    if submit:
+                        joined_data = pd.merge(
+                            df1, df2, left_on=table1_key, right_on=table2_key, how=table3_join)
+                        st.text(f"The joined data is: ")
+                        st.dataframe(joined_data, 2000, 200)
+                        st.download_button(
+                            label="Download data as CSV",
+                            data=joined_data.to_csv(
+                                sep=',', encoding='utf-8', index=False),
+                            file_name=f'Joined-data-export.csv',
+                            mime='text/csv',
+                        )
+
 
 
 if services_selected == "xlsx/csv to json conversion":
