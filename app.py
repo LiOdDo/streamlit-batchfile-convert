@@ -1,10 +1,12 @@
 import pandas as pd  # pip install pandas openpyxl
 import plotly.express as px  # pip install plotly-express
 import streamlit as st  # pip install streamlit
+import time
+import random
 import requests
 import json
 from xlsx2json import convert_xlsx
-from csv2json import convert_csv
+from csv2json import convert_csv, convert_csv_action_name
 from services_api import get_token, export_data, tql_data, import_data
 
 # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
@@ -21,8 +23,8 @@ user_pwd = st.sidebar.file_uploader(
 #    if url_input is not None:
 #        token = get_token(
 # S            f"{url_input}rest/v1/auth", user_pwd)
-#username = st.sidebar.text_input("Enter username")
-#password = st.sidebar.text_input("Enter a password", type="password")
+# username = st.sidebar.text_input("Enter username")
+# password = st.sidebar.text_input("Enter a password", type="password")
 
 # user_pwd = json.dumps(
 #     {
@@ -36,9 +38,9 @@ tql_options = pd.read_csv(
     'data-tql-collections.csv', dtype=str)
 tql_endpoint_options = tql_options['tql_resource']
 
-st.sidebar.subheader("Please Choose Endpoint:")
-endpoint_selected = st.sidebar.selectbox("Endpoints: ", endpoint_options)
-endpoint = endpoint_selected
+# st.sidebar.subheader("Please Choose Endpoint:")
+# endpoint_selected = st.sidebar.selectbox("Endpoints: ", endpoint_options)
+# endpoint = endpoint_selected
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
@@ -62,16 +64,21 @@ if services_selected == "intro":
 if services_selected == "data exports":
     if user_pwd is not None:
         st.subheader(f"Data Export Services")
-        df = export_data(endpoint, user_pwd, url_input)
-        st.text(f"The {endpoint} data: ")
-        st.dataframe(df)
+        st.subheader("Please Choose Endpoint:")
+        endpoint_selected = st.selectbox("Endpoints: ", endpoint_options)
+        endpoint = endpoint_selected
+        submit = st.button('Export Data')
+        if submit:
+            df = export_data(endpoint, user_pwd, url_input)
+            st.text(f"The {endpoint} data: ")
+            st.dataframe(df)
 
-        st.download_button(
-            label="Download data as CSV",
-            data=df.to_csv(sep=',', encoding='utf-8', index=False),
-            file_name=f'{endpoint}-data-export.csv',
-            mime='text/csv',
-        )
+            st.download_button(
+                label="Download data as CSV",
+                data=df.to_csv(sep=',', encoding='utf-8', index=False),
+                file_name=f'{endpoint}-data-export.csv',
+                mime='text/csv',
+            )
 
 if services_selected == "TQL":
 
@@ -99,6 +106,53 @@ if services_selected == "TQL":
                 file_name=f'QUER-data-export.csv',
                 mime='text/csv',
             )
+
+            col1, col2, col3 = st.columns(3)
+            # df = df.set_index('__group_0')
+            with col1:
+                options = [""]
+                options.extend(df.columns)
+                selected_x = st.selectbox(
+                    "Select column for x", options=options)
+                if not selected_x:
+                    selected_x = None
+            with col2:
+                selected_y = st.multiselect(
+                    "Select column(s) for y", options=df.columns
+                )
+                if not selected_y:
+                    selected_y = None
+                elif len(selected_y) == 1:
+                    selected_y = selected_y[0]
+
+            with col3:
+                selected_chart = st.selectbox(
+                    "Select chart type", options=["line_chart", "area_chart", "bar_chart"]
+                )
+
+            st.write("")
+            st.write("And here's your chart:")
+            try:
+                chart_command = getattr(st, selected_chart)
+                chart_command(
+                    df, x=selected_x, y=selected_y, use_container_width=True
+                )
+            except st.StreamlitAPIException as e:
+                st.error(e)
+
+            x_parameter = f' x="{selected_x}",' if selected_x else ""
+            y_parameter = ""
+            if selected_y and isinstance(selected_y, str):
+                y_parameter = f' y="{selected_y}",'
+            elif selected_y:
+                y_parameter = f" y={selected_y},"
+
+            # if not x_parameter and not y_parameter:
+            #     parameters_text = "df"
+            # else:
+            parameters_text = f"df,{x_parameter}{y_parameter}"
+            if parameters_text[-1] == ",":
+                parameters_text = parameters_text[:-1]
 
 if services_selected == "TQL Table Join Service":
     if user_pwd is not None:
@@ -163,7 +217,6 @@ if services_selected == "TQL Table Join Service":
                         )
 
 
-
 if services_selected == "xlsx/csv to json conversion":
     st.subheader("Batch Import File Convert Services - **_xlsx2json_**")
     st.markdown(
@@ -183,19 +236,39 @@ if services_selected == "xlsx/csv to json conversion":
 
     st.subheader("Batch Import File Convert Services - **_csv2json_**")
     st.markdown(
-        "Please define the **ENDPOINT** in the left side bar and include * in front field names for lookups")
+        "Please define the **ENDPOINT** in the box and include * in front field names for lookups")
+    box1, box2, box3 = st.columns(3)
+    with box1:
+        endpoint_selected = st.selectbox("Endpoints: ", endpoint_options)
+        endpoint = endpoint_selected
+    with box2:
+        action_type = st.selectbox(
+            "action type: ", ["REPLACE", "CREATE", "EXECUTE"])
+    with box3:
+        action_name = st.text_input("action name: ", '')
+
     uploaded_csv = st.file_uploader(
         "Please upload the csv file to convert into BATCH import json file")
     if uploaded_csv is not None:
         # To read file as bytes:
-        bytes_data = convert_csv(uploaded_csv, endpoint)
-        st.text(f"The {uploaded_csv.name} converted JSON file is: ")
-        st.write(bytes_data)
-        st.download_button(
-            label="Download json",
-            data=json.dumps(bytes_data),
-            file_name=f'{uploaded_csv.name.replace(".csv","")}-batch-file.json'
-        )
+        if action_type != 'EXECUTE':
+            bytes_data = convert_csv(uploaded_csv, endpoint, action_type)
+            st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+            st.write(bytes_data)
+            st.download_button(
+                label="Download json",
+                data=json.dumps(bytes_data),
+                file_name=f'{uploaded_csv.name.replace(".csv","")}-batch-file.json'
+            )
+        if action_type == 'EXECUTE':
+            bytes_data = convert_csv_action_name(
+                uploaded_csv, endpoint, action_name)
+            st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+            st.write(bytes_data)
+            st.download_button(
+                label="Download json",
+                data=json.dumps(bytes_data),
+                file_name=f'{uploaded_csv.name.replace(".csv","")}-batch-file.json')
 
 if services_selected == "data imports":
     st.subheader(f"Data Import Services - TrackTik Internal Use Only")
