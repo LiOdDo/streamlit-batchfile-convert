@@ -31,7 +31,7 @@ def build_lookup(lookuplist, data_source, row):
     return lookup_temp
 
 
-def convert_csv(template_file, endpoint):
+def convert_csv(template_file, endpoint, action_type):
     # from .import build_dict
 
     data_source = pd.read_csv(template_file, dtype=str)
@@ -52,7 +52,33 @@ def convert_csv(template_file, endpoint):
         data_temp = build_dict(data_source, i)
         lookup_temp = build_lookup(lookup_list, data_source, i)
         source_to_import['operations'].append({'lookup': lookup_temp,
-                                               'action': 'REPLACE', 'resource': f'{endpoint}',
+                                               'action': f'{action_type}', 'resource': f'{endpoint}',
+                                               'data': data_temp})
+    return source_to_import
+
+
+def convert_csv_action_name(template_file, endpoint, action_name):
+    # from .import build_dict
+
+    data_source = pd.read_csv(template_file, dtype=str)
+    data_source.fillna('', inplace=True)
+    source_to_import = {"onFailure": "ABORT",
+                        "operations": []}
+    lookup_list = []
+    for col in data_source.columns:
+        if "*" in col:
+            col = col.replace("*", "")
+            lookup_list.append(col)
+
+    data_source.columns = data_source.columns.str.replace("*", "")
+    data_source.fillna('', inplace=True)
+    total_source = len(data_source[data_source.columns[0]])
+
+    for i in range(total_source):
+        data_temp = build_dict(data_source, i)
+        lookup_temp = build_lookup(lookup_list, data_source, i)
+        source_to_import['operations'].append({'lookup': lookup_temp,
+                                               'action': 'EXECUTE', 'actionName': f'{action_name}', 'resource': f'{endpoint}',
                                                'data': data_temp})
     return source_to_import
 
