@@ -143,7 +143,7 @@ if services_selected == "TQL":
                 fig3 = px.pie(df, values=selected_y, names=selected_x,
                               title='beta')
                 fig3.update_layout(autotypenumbers='convert types')
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig3, use_container_width=True)
 
 if services_selected == "TQL Table Join Service":
     if user_pwd is not None:
