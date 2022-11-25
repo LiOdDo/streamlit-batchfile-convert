@@ -133,7 +133,7 @@ if services_selected == "TQL":
             if selected_chart == 'line_chart':
                 fig1 = px.line(df,
                                x=selected_x, y=selected_y, title="beta")
-                fig1.update_layout(autotypenumbers='convert types')
+                fig1.update_layout(autotypenumbers='convert types',use_container_width=True)
                 st.plotly_chart(fig1)
             if selected_chart == 'bar_chart':
                 fig2 = px.bar(df, x=selected_x, y=selected_y)
