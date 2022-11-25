@@ -127,32 +127,23 @@ if services_selected == "TQL":
 
             with col3:
                 selected_chart = st.selectbox(
-                    "Select chart type", options=["line_chart", "area_chart", "bar_chart"]
+                    "Select chart type", options=["line_chart", "bar_chart", "pie_chart"]
                 )
 
-            st.write("")
-            st.write("And here's your chart:")
-            try:
-                chart_command = getattr(st, selected_chart)
-                chart_command(
-                    df, x=selected_x, y=selected_y, use_container_width=True
-                )
-            except st.StreamlitAPIException as e:
-                st.error(e)
-
-            x_parameter = f' x="{selected_x}",' if selected_x else ""
-            y_parameter = ""
-            if selected_y and isinstance(selected_y, str):
-                y_parameter = f' y="{selected_y}",'
-            elif selected_y:
-                y_parameter = f" y={selected_y},"
-
-            # if not x_parameter and not y_parameter:
-            #     parameters_text = "df"
-            # else:
-            parameters_text = f"df,{x_parameter}{y_parameter}"
-            if parameters_text[-1] == ",":
-                parameters_text = parameters_text[:-1]
+            if selected_chart == 'line_chart':
+                fig1 = px.line(df,
+                               x=selected_x, y=selected_y, title="beta")
+                fig1.update_layout(autotypenumbers='convert types')
+                st.plotly_chart(fig1)
+            if selected_chart == 'bar_chart':
+                fig2 = px.bar(df, x=selected_x, y=selected_y)
+                fig2.update_layout(autotypenumbers='convert types')
+                st.plotly_chart(fig2)
+            if selected_chart == 'pie_chart':
+                fig3 = px.pie(df, values=selected_y, names=selected_x,
+                              title='beta')
+                fig3.update_layout(autotypenumbers='convert types')
+                st.plotly_chart(fig3)
 
 if services_selected == "TQL Table Join Service":
     if user_pwd is not None:
