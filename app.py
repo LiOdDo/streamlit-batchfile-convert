@@ -136,12 +136,12 @@ if services_selected == "TQL":
                 fig1.update_layout(autotypenumbers='convert types')
                 st.plotly_chart(fig1)
             if selected_chart == 'bar_chart':
-                fig2 = px.bar(df, x=selected_x, y=selected_y,,use_container_width=True)
+                fig2 = px.bar(df, x=selected_x, y=selected_y,use_container_width=True)
                 fig2.update_layout(autotypenumbers='convert types')
                 st.plotly_chart(fig2)
             if selected_chart == 'pie_chart':
                 fig3 = px.pie(df, values=selected_y, names=selected_x,
-                              title='beta',,use_container_width=True)
+                              title='beta',use_container_width=True)
                 fig3.update_layout(autotypenumbers='convert types')
                 st.plotly_chart(fig3)
 
