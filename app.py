@@ -134,16 +134,16 @@ if services_selected == "TQL":
                 fig1 = px.line(df,
                                x=selected_x, y=selected_y, title="beta")
                 fig1.update_layout(autotypenumbers='convert types')
-                st.plotly_chart(fig1)
+                st.plotly_chart(fig1, use_container_width=True)
             if selected_chart == 'bar_chart':
                 fig2 = px.bar(df, x=selected_x, y=selected_y)
                 fig2.update_layout(autotypenumbers='convert types')
-                st.plotly_chart(fig2)
+                st.plotly_chart(fig2, use_container_width=True)
             if selected_chart == 'pie_chart':
                 fig3 = px.pie(df, values=selected_y, names=selected_x,
                               title='beta')
                 fig3.update_layout(autotypenumbers='convert types')
-                st.plotly_chart(fig3)
+                st.plotly_chart(fig, use_container_width=True3)
 
 if services_selected == "TQL Table Join Service":
     if user_pwd is not None:
