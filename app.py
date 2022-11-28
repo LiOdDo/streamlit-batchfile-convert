@@ -127,23 +127,43 @@ if services_selected == "TQL":
 
             with col3:
                 selected_chart = st.selectbox(
-                    "Select chart type", options=["line_chart", "bar_chart", "pie_chart"]
+                    "Select chart type", options=["scatter_chart", "area_chart", "hist_chart", "line_chart", "bar_chart", "pie_chart"]
                 )
+            with col4:
+                selected_z = st.selectbox(
+                    "Select column for color", options=options)
+                if not selected_z:
+                    selected_z = None
 
-            if selected_chart == 'line_chart':
-                fig1 = px.line(df,
-                               x=selected_x, y=selected_y, title="beta")
+            if selected_chart == 'scatter_chart':
+                fig1 = px.scatter(df,
+                                  x=selected_x, y=selected_y, color=selected_z)
                 fig1.update_layout(autotypenumbers='convert types')
                 st.plotly_chart(fig1, use_container_width=True)
-            if selected_chart == 'bar_chart':
-                fig2 = px.bar(df, x=selected_x, y=selected_y)
+            if selected_chart == 'area_chart':
+                fig2 = px.area(df, x=selected_x,
+                               y=selected_y, color=selected_z)
                 fig2.update_layout(autotypenumbers='convert types')
                 st.plotly_chart(fig2, use_container_width=True)
-            if selected_chart == 'pie_chart':
-                fig3 = px.pie(df, values=selected_y, names=selected_x,
-                              title='beta')
+            if selected_chart == 'hist_chart':
+                fig3 = px.histogram(df, x=selected_x,
+                                    y=selected_y, color=selected_z)
                 fig3.update_layout(autotypenumbers='convert types')
                 st.plotly_chart(fig3, use_container_width=True)
+            if selected_chart == 'line_chart':
+                fig4 = px.line(df,
+                               x=selected_x, y=selected_y, color=selected_z)
+                fig4.update_layout(autotypenumbers='convert types')
+                st.plotly_chart(fig4, use_container_width=True)
+            if selected_chart == 'bar_chart':
+                fig5 = px.bar(df, x=selected_x, y=selected_y, color=selected_z)
+                fig5.update_layout(autotypenumbers='convert types')
+                st.plotly_chart(fig5, use_container_width=True)
+            if selected_chart == 'pie_chart':
+                fig6 = px.pie(df, values=selected_y, names=selected_x,
+                              title='beta')
+                fig6.update_layout(autotypenumbers='convert types')
+                st.plotly_chart(fig6, use_container_width=True)
 
 if services_selected == "TQL Table Join Service":
     if user_pwd is not None:
