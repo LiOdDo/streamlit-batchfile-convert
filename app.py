@@ -44,7 +44,7 @@ tql_endpoint_options = tql_options['tql_resource']
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
-    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "xlsx/csv to json conversion", "data imports"])
+    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "xlsx/csv to json conversion", "data imports", "BETA TESTING"])
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
@@ -292,5 +292,44 @@ if services_selected == "data imports":
             data = import_data(url_input, user_pwd, file_to_import)
             st.text(f"The {file_to_import.name} import result is: ")
             st.write(data)
+if services_selected == "BETA TESTING":
+    gapminder = px.data.gapminder()
+    fig2 = px.scatter(gapminder,  # dataframe
+                      x="gdpPercap",  # x-values column
+                      y="lifeExp",  # y-values column
+                      animation_frame="year",  # column animated
+                      animation_group="country",  # column shown as bubble
+                      size="pop",  # column shown by size
+                      color="continent",  # column shown by color
+                      hover_name="country",  # hover info title
+                      log_x=True,  # use logs on x-values
+                      size_max=55,  # change max size of bubbles
+                      range_x=[100, 100000],  # axis range for x-values
+                      range_y=[25, 90]  # axis range for y-values
+                      )
+    st.plotly_chart(fig2, use_container_width=True)
+    if user_pwd is not None:
+        if url_input is not None:
+            token = get_token(
+                f"{url_input}rest/v1/auth", user_pwd)
+
+        st.subheader(f"TQL Query Services")
+        query_endpoint = st.selectbox(
+            "Available Queries: ", tql_endpoint_options)
+        sample_query = tql_options.loc[tql_options['tql_resource']
+                                       == query_endpoint, 'TQL'].iloc[0]
+        tql_query = st.text_area(
+            label="Please Type Query Here: ", value=sample_query, height=None)
+
+        if len(tql_query) > 0:
+            df = tql_data(token, url_input, tql_query)
+            st.text(f"The QUERY data: ")
+            st.dataframe(df)
+            st.text(df['latitude'][0])
+            fig = px.scatter_mapbox(df, lat="latitude", lon="longitude",
+                                    color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=10
+                                    )
+            fig.update_layout(autotypenumbers='convert types')
+            st.plotly_chart(fig, use_container_width=True)
 
 # ---SIDEBAR---
