@@ -163,6 +163,7 @@ if services_selected == "TQL":
                 fig6 = px.pie(df, values=selected_y, names=selected_x,
                               title='beta')
                 fig6.update_layout(autotypenumbers='convert types')
+                fig6.update_traces(textposition='inside', textinfo='percent+label')
                 st.plotly_chart(fig6, use_container_width=True)
 
 if services_selected == "TQL Table Join Service":
