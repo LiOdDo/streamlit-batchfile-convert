@@ -401,7 +401,7 @@ if services_selected == "TQL-Report-Pivot Service":
                     st.download_button(
                         label=f"Download report {reportTemplate} data as CSV",
                         data=report_data.to_csv(
-                            sep=',', encoding='utf-8', index=False),
+                            sep=',', encoding='utf-8', index=True),
                         file_name=f"report_{reportTemplate}_export.csv",
                         mime='text/csv',
                     )
