@@ -5,9 +5,10 @@ import time
 import random
 import requests
 import json
+#import sessionState
 from xlsx2json import convert_xlsx
 from csv2json import convert_csv, convert_csv_action_name
-from services_api import get_token, export_data, tql_data, import_data
+from services_api import get_token, export_data, tql_data, import_data, batch_report_export
 
 # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="API BETA PLAYGROUND",
@@ -44,7 +45,7 @@ tql_endpoint_options = tql_options['tql_resource']
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
-    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "xlsx/csv to json conversion", "data imports", "BETA TESTING"])
+    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "xlsx/csv to json conversion", "data imports", "BETA TESTING", "TQL-Report-Pivot Service"])
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
@@ -163,8 +164,35 @@ if services_selected == "TQL":
                 fig6 = px.pie(df, values=selected_y, names=selected_x,
                               title='beta')
                 fig6.update_layout(autotypenumbers='convert types')
-                fig6.update_traces(textposition='inside', textinfo='percent+label')
+                fig6.update_traces(textposition='inside',
+                                   textinfo='percent+label')
                 st.plotly_chart(fig6, use_container_width=True)
+
+            # st.write("")
+            # st.write("And here's your chart:")
+
+            # try:
+            #     chart_command = getattr(st, selected_chart)
+            #     chart_command(
+            #         df, x=selected_x, y=selected_y, use_container_width=True
+            #     )
+            # except st.StreamlitAPIException as e:
+            #     st.error(e)
+
+            # x_parameter = f' x="{selected_x}",' if selected_x else ""
+            # y_parameter = ""
+            # if selected_y and isinstance(selected_y, str):
+            #     y_parameter = f' y="{selected_y}",'
+            # elif selected_y:
+            #     y_parameter = f" y={selected_y},"
+
+            # # if not x_parameter and not y_parameter:
+            # #     parameters_text = "df"
+            # # else:
+            # parameters_text = f"df,{x_parameter}{y_parameter}"
+            # if parameters_text[-1] == ",":
+            #     parameters_text = parameters_text[:-1]
+
 
 if services_selected == "TQL Table Join Service":
     if user_pwd is not None:
@@ -186,6 +214,13 @@ if services_selected == "TQL Table Join Service":
                     df1 = tql_data(token, url_input, tql_query1)
                     option1 = st.text(f"The QUERY data 1: ")
                     st.dataframe(df1, 2000, 200)
+                    st.download_button(
+                        label="Download data as CSV",
+                        data=df1.to_csv(
+                            sep=',', encoding='utf-8', index=False),
+                        file_name=f'Joined-data-export.csv',
+                        mime='text/csv', key="0001223buttona"
+                    )
 
             with col2:
                 st.subheader(f"TQL table2")
@@ -200,6 +235,13 @@ if services_selected == "TQL Table Join Service":
                     df2 = tql_data(token, url_input, tql_query2)
                     option2 = st.text(f"The QUERY data 2: ")
                     st.dataframe(df2, 2000, 200)
+                    st.download_button(
+                        label="Download data as CSV",
+                        data=df2.to_csv(
+                            sep=',', encoding='utf-8', index=False),
+                        file_name=f'Joined-data-export.csv',
+                        mime='text/csv', key="0001223buttonb"
+                    )
 
             st.subheader(f"JOIN Table1 AND Table2")
             if df1 is not None:
@@ -292,6 +334,7 @@ if services_selected == "data imports":
             data = import_data(url_input, user_pwd, file_to_import)
             st.text(f"The {file_to_import.name} import result is: ")
             st.write(data)
+
 if services_selected == "BETA TESTING":
     gapminder = px.data.gapminder()
     fig2 = px.scatter(gapminder,  # dataframe
@@ -326,10 +369,30 @@ if services_selected == "BETA TESTING":
             st.text(f"The QUERY data: ")
             st.dataframe(df)
             st.text(df['latitude'][0])
-            fig = px.scatter_mapbox(df, lat="latitude", lon="longitude",
+            fig = px.scatter_mapbox(df, lat=list(df["latitude"]), lon=list(df["longitude"]),
                                     color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=10
                                     )
             fig.update_layout(autotypenumbers='convert types')
             st.plotly_chart(fig, use_container_width=True)
 
-# ---SIDEBAR---
+if services_selected == "TQL-Report-Pivot Service":
+    if user_pwd is not None:
+        if url_input is not None:
+            token = get_token(f"{url_input}rest/v1/auth", user_pwd)
+            with open("tql_report_batch_export_beta.csv", newline='', encoding='utf-8') as file:
+                btn = st.download_button(
+                    label="download demo report metric file_https://innovation.staffr.net/",
+                    data=file,
+                    file_name="tql_report_batch_export_beta.csv",
+                    mime="text/csv"
+                )
+            report_metric_file = st.file_uploader(
+                "Please upload the report metric file")
+            file_direct = st.text_input(
+                "Please add file directory (make sure us '/'): ", '')
+            if report_metric_file is not None:
+                if len(file_direct) > 0:
+                    batch_report_export(
+                        token, url_input, report_metric_file, file_direct)
+
+    # ---SIDEBAR---
