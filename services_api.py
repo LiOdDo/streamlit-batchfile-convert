@@ -112,7 +112,57 @@ def import_data(url_input, user_pwd, file_to_import):
     return data
 
 
-def batch_report_export(token, url_input, report_metric_file, path_direct):
+def single_report_export(token, url_input, report_template, accounts, start_date, end_date):
+    if report_template is not None:
+        if len(accounts) > 0:
+            url = url_input + "rest/v1/tql?tql=SELECT report,report.account.name,report.reportDateTime,report.createdBy.name,report.reportTemplate.name,templateField.label,value FROM report_fields where report.account:in=" + f"({accounts})" + \
+                " AND report.reportTemplate =" + report_template + " AND date(report.reportDateTime) >= '" + f"{start_date}" + \
+                "' AND date(report.reportDateTime) <= '" + \
+                f"{end_date}" + "' limit 200000000"
+        if len(accounts) == 0:
+            url = url_input + "rest/v1/tql?tql=SELECT report,report.account.name,report.reportDateTime,report.createdBy.name,report.reportTemplate.name,templateField.label,value FROM report_fields " + \
+                " WHERE report.reportTemplate =" + report_template + " AND date(report.reportDateTime) >= '" + f"{start_date}" + \
+                "' AND date(report.reportDateTime) <= '" + \
+                f"{end_date}" + "' limit 200000000"
+        # " AND report.reportDateTime >= LAST_YEAR_START limit 20000000"
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer '+token,
+            # 'Cookie': 'PHPSESSID=vqru8j08ho4oe1uaht3d6mikchqak2or',
+            # 'Content-Type': 'application/json'
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+
+        st.text(url)
+        st.text(len(accounts))
+
+        response = requests.request(
+            "GET", url, headers=headers, data=payload)
+
+        data = response.json()
+        time.sleep(2)
+        df0 = pd.json_normalize(data['data'])
+        # print(df)
+
+        df1 = df0[['report', 'report.account.name', 'report.reportDateTime', 'report.createdBy.name',
+                   'report.reportTemplate.name', 'templateField.label', 'value']]
+        df1 = df1.rename(columns={'report': 'report id', 'report.account.name': 'account name', 'report.reportDateTime': 'report time', 'report.createdBy.name': 'reported by',
+                                  'report.reportTemplate.name': 'report template', 'templateField.label': 'report field', 'value': 'reported value'})
+
+        df_new = pd.pivot_table(df1, index=['report id', 'account name', 'report time', 'reported by', 'report template'],
+                                columns=['report field'], values=['reported value'], aggfunc='first')
+        df_new.to_csv(
+            f'report_{report_template}.csv', sep=',', encoding='utf-8-sig')
+        with open(f"report_{report_template}.csv", newline='', encoding='utf-8') as file:
+            st.download_button(
+                label="download this report",
+                data=file,
+                file_name=f"report_{report_template}.csv",
+                mime="text/csv"
+            )
+
+
+def batch_report_export(token, url_input, report_metric_file):
     report_template = pd.read_csv(report_metric_file, dtype=str)
 
     temp_id = report_template['report.reportTemplate.id']
@@ -153,4 +203,11 @@ def batch_report_export(token, url_input, report_metric_file, path_direct):
         df_new = pd.pivot_table(df1, index=['report id', 'account name', 'report time', 'reported by', 'report template'],
                                 columns=['report field'], values=['reported value'], aggfunc='first')
         df_new.to_csv(
-            f'{path_direct}/report_{temp_name[i]}_{temp_id[i]}_{account_name[i]}.csv', sep=',', encoding='utf-8-sig')
+            f'report_{temp_name[i]}_{temp_id[i]}_{account_name[i]}.csv', sep=',', encoding='utf-8-sig')
+        with open(f"report_{temp_name[i]}_{temp_id[i]}_{account_name[i]}.csv", newline='', encoding='utf-8') as file:
+            st.download_button(
+                label="download this report",
+                data=file,
+                file_name=f"report_{temp_name[i]}_{temp_id[i]}_{account_name[i]}.csv",
+                mime="text/csv"
+            )
