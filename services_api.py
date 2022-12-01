@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import json
 import streamlit as st
+import time
 
 
 def get_token(url, access):
@@ -109,3 +110,47 @@ def import_data(url_input, user_pwd, file_to_import):
     data = response.json()
 
     return data
+
+
+def batch_report_export(token, url_input, report_metric_file, path_direct):
+    report_template = pd.read_csv(report_metric_file, dtype=str)
+
+    temp_id = report_template['report.reportTemplate.id']
+    temp_name = report_template['report.reportTemplate.name']
+    account_id = report_template['report.account']
+    account_name = report_template['report.account.name']
+
+    min_id = report_template['min_id']
+    max_id = report_template['max_id']
+
+    for i in range(len(temp_id)):
+        url = url_input + "rest/v1/tql?tql=SELECT report,report.account.name,report.reportDateTime,report.createdBy.name,report.reportTemplate.name,templateField.label,value FROM report_fields where report.account=" + account_id[i] + \
+            " AND report.reportTemplate =" + \
+            temp_id[i] + " AND report >= " + min_id[i] + \
+            " AND report <=" + max_id[i] + " limit 200000000"
+        # " AND report.reportDateTime >= LAST_YEAR_START limit 20000000"
+        payload = {}
+        headers = {
+            'Authorization': 'Bearer '+token,
+            # 'Cookie': 'PHPSESSID=vqru8j08ho4oe1uaht3d6mikchqak2or',
+            # 'Content-Type': 'application/json'
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+
+        response = requests.request(
+            "GET", url, headers=headers, data=payload)
+
+        data = response.json()
+        time.sleep(2)
+        df0 = pd.json_normalize(data['data'])
+        # print(df)
+
+        df1 = df0[['report', 'report.account.name', 'report.reportDateTime', 'report.createdBy.name',
+                   'report.reportTemplate.name', 'templateField.label', 'value']]
+        df1 = df1.rename(columns={'report': 'report id', 'report.account.name': 'account name', 'report.reportDateTime': 'report time', 'report.createdBy.name': 'reported by',
+                                  'report.reportTemplate.name': 'report template', 'templateField.label': 'report field', 'value': 'reported value'})
+
+        df_new = pd.pivot_table(df1, index=['report id', 'account name', 'report time', 'reported by', 'report template'],
+                                columns=['report field'], values=['reported value'], aggfunc='first')
+        df_new.to_csv(
+            f'{path_direct}/report_{temp_name[i]}_{temp_id[i]}_{account_name[i]}.csv', sep=',', encoding='utf-8-sig')
