@@ -400,7 +400,7 @@ if services_selected == "TQL-Report-Pivot Service":
                     st.dataframe(report_data, 2000, 200)
                     st.download_button(
                         label=f"Download report {reportTemplate} data as CSV",
-                        data=joined_data.to_csv(
+                        data=report_data.to_csv(
                             sep=',', encoding='utf-8', index=False),
                         file_name=f"report_{reportTemplate}_export.csv",
                         mime='text/csv',
