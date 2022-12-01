@@ -133,9 +133,6 @@ def single_report_export(token, url_input, report_template, accounts, start_date
             'Content-Type': 'application/json; charset=utf-8'
         }
 
-        st.text(url)
-        st.text(len(accounts))
-
         response = requests.request(
             "GET", url, headers=headers, data=payload)
 
