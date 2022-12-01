@@ -391,9 +391,11 @@ if services_selected == "TQL-Report-Pivot Service":
                     "start date: ", '', key="0001224232c")
             with col4:
                 endDate = st.text_input("end date: ", '', key="0001224232d")
-            if reportTemplate is not None:
-                single_report_export(
-                    token, url_input, reportTemplate, accounts, startDate, endDate)
+            submit = st.button('Export Report')
+            if submit:
+                if reportTemplate is not None:
+                    single_report_export(
+                        token, url_input, reportTemplate, accounts, startDate, endDate)ate, endDate)
 
             # with open("tql_report_batch_export_beta1.csv", newline='', encoding='utf-8') as file:
             #     btn = st.download_button(
