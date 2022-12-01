@@ -379,7 +379,7 @@ if services_selected == "TQL-Report-Pivot Service":
     if user_pwd is not None:
         if url_input is not None:
             token = get_token(f"{url_input}rest/v1/auth", user_pwd)
-            with open("tql_report_batch_export_beta.CSV", newline='', encoding='utf-8') as file:
+            with open("tql_report_batch_export_beta.csv", newline='', encoding='utf-8') as file:
                 btn = st.download_button(
                     label="download demo report metric file_https://innovation.staffr.net/",
                     data=file,
