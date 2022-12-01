@@ -8,7 +8,7 @@ import json
 #import sessionState
 from xlsx2json import convert_xlsx
 from csv2json import convert_csv, convert_csv_action_name
-from services_api import get_token, export_data, tql_data, import_data, batch_report_export
+from services_api import get_token, export_data, tql_data, import_data, single_report_export
 
 # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="API BETA PLAYGROUND",
@@ -379,20 +379,35 @@ if services_selected == "TQL-Report-Pivot Service":
     if user_pwd is not None:
         if url_input is not None:
             token = get_token(f"{url_input}rest/v1/auth", user_pwd)
-            with open("tql_report_batch_export_beta.csv", newline='', encoding='utf-8') as file:
-                btn = st.download_button(
-                    label="download demo report metric file_https://innovation.staffr.net/",
-                    data=file,
-                    file_name="tql_report_batch_export_beta.csv",
-                    mime="text/csv"
-                )
-            report_metric_file = st.file_uploader(
-                "Please upload the report metric file")
-            file_direct = st.text_input(
-                "Please add file directory (make sure us '/'): ", '')
-            if report_metric_file is not None:
-                if len(file_direct) > 0:
-                    batch_report_export(
-                        token, url_input, report_metric_file, file_direct)
+            col1, col5, col2, col6, col3, col7, col4 = st.columns(7)
+            with col1:
+                reportTemplate = st.text_input(
+                    "report template is: ", '', key="0001224232a")
+            with col2:
+                accounts = st.text_input(
+                    "account id list is: ", '', key="0001224232b")
+            with col3:
+                startDate = st.text_input(
+                    "start date: ", '', key="0001224232c")
+            with col4:
+                endDate = st.text_input("end date: ", '', key="0001224232d")
+            if reportTemplate is not None:
+                single_report_export(
+                    token, url_input, reportTemplate, accounts, startDate, endDate)
+
+            # with open("tql_report_batch_export_beta1.csv", newline='', encoding='utf-8') as file:
+            #     btn = st.download_button(
+            #         label="download demo report metric file_https://innovation.staffr.net/",
+            #         data=file,
+            #         file_name="tql_report_batch_export_beta.csv",
+            #         mime="text/csv"
+            #     )
+            # report_metric_file = st.file_uploader(
+            #     "Please upload the report metric file")
+            # # file_direct = st.text_input(
+            # #    "Please add file directory (make sure us '/'): ", '')
+            # if report_metric_file is not None:
+            #     batch_report_export(
+            #         token, url_input, report_metric_file)
 
     # ---SIDEBAR---
