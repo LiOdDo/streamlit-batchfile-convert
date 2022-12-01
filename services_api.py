@@ -148,15 +148,16 @@ def single_report_export(token, url_input, report_template, accounts, start_date
 
         df_new = pd.pivot_table(df1, index=['report id', 'account name', 'report time', 'reported by', 'report template'],
                                 columns=['report field'], values=['reported value'], aggfunc='first')
-        df_new.to_csv(
-            f'report_{report_template}.csv', sep=',', encoding='utf-8-sig')
-        with open(f"report_{report_template}.csv", newline='', encoding='utf-8') as file:
-            st.download_button(
-                label="download this report",
-                data=file,
-                file_name=f"report_{report_template}.csv",
-                mime="text/csv"
-            )
+        return df_new
+        # df_new.to_csv(
+        #     f'report_{report_template}.csv', sep=',', encoding='utf-8-sig')
+        # with open(f"report_{report_template}.csv", newline='', encoding='utf-8') as file:
+        #     st.download_button(
+        #         label="download this report",
+        #         data=file,
+        #         file_name=f"report_{report_template}.csv",
+        #         mime="text/csv"
+        #     )
 
 
 def batch_report_export(token, url_input, report_metric_file):
