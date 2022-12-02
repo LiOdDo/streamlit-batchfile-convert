@@ -115,7 +115,7 @@ def import_data(url_input, user_pwd, file_to_import):
 def single_report_export(token, url_input, report_template, accounts, start_date, end_date):
     if report_template is not None:
         if len(accounts) > 0:
-            url = url_input + "rest/v1/tql?tql=SELECT report,report.account.name,report.reportDateTime,report.createdBy.name,report.reportTemplate.name,templateField.label,value FROM report_fields where report.account:in=" + f"({accounts})" + \
+            url = url_input + "rest/v1/tql?tql=SELECT report,report.account.name,report.reportDateTime,report.createdBy.name,report.reportTemplate.name,templateField.label,value FROM report_fields where report.account in " + f"({accounts})" + \
                 " AND report.reportTemplate =" + report_template + " AND date(report.reportDateTime) >= '" + f"{start_date}" + \
                 "' AND date(report.reportDateTime) <= '" + \
                 f"{end_date}" + "' limit 200000000"
