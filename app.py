@@ -351,29 +351,7 @@ if services_selected == "BETA TESTING":
                       range_y=[25, 90]  # axis range for y-values
                       )
     st.plotly_chart(fig2, use_container_width=True)
-    if user_pwd is not None:
-        if url_input is not None:
-            token = get_token(
-                f"{url_input}rest/v1/auth", user_pwd)
 
-        st.subheader(f"TQL Query Services")
-        query_endpoint = st.selectbox(
-            "Available Queries: ", tql_endpoint_options)
-        sample_query = tql_options.loc[tql_options['tql_resource']
-                                       == query_endpoint, 'TQL'].iloc[0]
-        tql_query = st.text_area(
-            label="Please Type Query Here: ", value=sample_query, height=None)
-
-        if len(tql_query) > 0:
-            df = tql_data(token, url_input, tql_query)
-            st.text(f"The QUERY data: ")
-            st.dataframe(df)
-            st.text(df['latitude'][0])
-            fig = px.scatter_mapbox(df, lat=list(df["latitude"]), lon=list(df["longitude"]),
-                                    color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=10
-                                    )
-            fig.update_layout(autotypenumbers='convert types')
-            st.plotly_chart(fig, use_container_width=True)
 
 if services_selected == "TQL-Report-Pivot Service":
     if user_pwd is not None:
