@@ -1,5 +1,5 @@
 import pandas as pd  # pip install pandas openpyxl
-import plotly.express as px  # pip install plotly-express
+# import plotly.express as px  # pip install plotly-express
 import streamlit as st  # pip install streamlit
 import time
 import random
@@ -45,7 +45,7 @@ tql_endpoint_options = tql_options['tql_resource']
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
-    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "xlsx/csv to json conversion", "data imports", "BETA TESTING", "TQL-Report-Pivot Service"])
+    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "xlsx/csv to json conversion", "data imports", "TQL-Report-Pivot Service"])
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
@@ -107,92 +107,6 @@ if services_selected == "TQL":
                 file_name=f'QUER-data-export.csv',
                 mime='text/csv',
             )
-
-            col1, col2, col3, col4 = st.columns(4)
-            # df = df.set_index('__group_0')
-            with col1:
-                options = [""]
-                options.extend(df.columns)
-                selected_x = st.selectbox(
-                    "Select column for x", options=options)
-                if not selected_x:
-                    selected_x = None
-            with col2:
-                selected_y = st.multiselect(
-                    "Select column(s) for y", options=df.columns
-                )
-                if not selected_y:
-                    selected_y = None
-                elif len(selected_y) == 1:
-                    selected_y = selected_y[0]
-
-            with col3:
-                selected_chart = st.selectbox(
-                    "Select chart type", options=["scatter_chart", "area_chart", "hist_chart", "line_chart", "bar_chart", "pie_chart"]
-                )
-            with col4:
-                selected_z = st.selectbox(
-                    "Select column for color", options=options)
-                if not selected_z:
-                    selected_z = None
-
-            if selected_chart == 'scatter_chart':
-                fig1 = px.scatter(df,
-                                  x=selected_x, y=selected_y, color=selected_z)
-                fig1.update_layout(autotypenumbers='convert types')
-                st.plotly_chart(fig1, use_container_width=True)
-            if selected_chart == 'area_chart':
-                fig2 = px.area(df, x=selected_x,
-                               y=selected_y, color=selected_z)
-                fig2.update_layout(autotypenumbers='convert types')
-                st.plotly_chart(fig2, use_container_width=True)
-            if selected_chart == 'hist_chart':
-                fig3 = px.histogram(df, x=selected_x,
-                                    y=selected_y, color=selected_z)
-                fig3.update_layout(autotypenumbers='convert types')
-                st.plotly_chart(fig3, use_container_width=True)
-            if selected_chart == 'line_chart':
-                fig4 = px.line(df,
-                               x=selected_x, y=selected_y, color=selected_z)
-                fig4.update_layout(autotypenumbers='convert types')
-                st.plotly_chart(fig4, use_container_width=True)
-            if selected_chart == 'bar_chart':
-                fig5 = px.bar(df, x=selected_x, y=selected_y, color=selected_z)
-                fig5.update_layout(autotypenumbers='convert types')
-                st.plotly_chart(fig5, use_container_width=True)
-            if selected_chart == 'pie_chart':
-                fig6 = px.pie(df, values=selected_y, names=selected_x,
-                              title='beta')
-                fig6.update_layout(autotypenumbers='convert types')
-                fig6.update_traces(textposition='inside',
-                                   textinfo='percent+label')
-                st.plotly_chart(fig6, use_container_width=True)
-
-            # st.write("")
-            # st.write("And here's your chart:")
-
-            # try:
-            #     chart_command = getattr(st, selected_chart)
-            #     chart_command(
-            #         df, x=selected_x, y=selected_y, use_container_width=True
-            #     )
-            # except st.StreamlitAPIException as e:
-            #     st.error(e)
-
-            # x_parameter = f' x="{selected_x}",' if selected_x else ""
-            # y_parameter = ""
-            # if selected_y and isinstance(selected_y, str):
-            #     y_parameter = f' y="{selected_y}",'
-            # elif selected_y:
-            #     y_parameter = f" y={selected_y},"
-
-            # # if not x_parameter and not y_parameter:
-            # #     parameters_text = "df"
-            # # else:
-            # parameters_text = f"df,{x_parameter}{y_parameter}"
-            # if parameters_text[-1] == ",":
-            #     parameters_text = parameters_text[:-1]
-
 
 if services_selected == "TQL Table Join Service":
     if user_pwd is not None:
@@ -334,23 +248,6 @@ if services_selected == "data imports":
             data = import_data(url_input, user_pwd, file_to_import)
             st.text(f"The {file_to_import.name} import result is: ")
             st.write(data)
-
-if services_selected == "BETA TESTING":
-    gapminder = px.data.gapminder()
-    fig2 = px.scatter(gapminder,  # dataframe
-                      x="gdpPercap",  # x-values column
-                      y="lifeExp",  # y-values column
-                      animation_frame="year",  # column animated
-                      animation_group="country",  # column shown as bubble
-                      size="pop",  # column shown by size
-                      color="continent",  # column shown by color
-                      hover_name="country",  # hover info title
-                      log_x=True,  # use logs on x-values
-                      size_max=55,  # change max size of bubbles
-                      range_x=[100, 100000],  # axis range for x-values
-                      range_y=[25, 90]  # axis range for y-values
-                      )
-    st.plotly_chart(fig2, use_container_width=True)
 
 
 if services_selected == "TQL-Report-Pivot Service":
