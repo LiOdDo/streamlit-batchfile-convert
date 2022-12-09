@@ -90,11 +90,11 @@ if services_selected == "TQL":
 
         st.subheader(f"TQL Query Services")
         query_endpoint = st.selectbox(
-            "Available Queries: ", tql_endpoint_options)
+            "Available Query Example: ", tql_endpoint_options)
         sample_query = tql_options.loc[tql_options['tql_resource']
                                        == query_endpoint, 'TQL'].iloc[0]
         tql_query = st.text_area(
-            label="Please Type Query Here: ", value=sample_query, height=None)
+            label="Please Build Your Own Query Here: ", value=sample_query, height=None)
 
         if len(tql_query) > 0:
             df = tql_data(token, url_input, tql_query)
@@ -118,11 +118,11 @@ if services_selected == "TQL Table Join Service":
             with col1:
                 st.subheader(f"TQL table1")
                 query_endpoint1 = st.selectbox(
-                    "Available Queries: ", tql_endpoint_options, key="0001221a")
+                    "Available Query Examples: ", tql_endpoint_options, key="0001221a")
                 sample_query1 = tql_options.loc[tql_options['tql_resource']
                                                 == query_endpoint1, 'TQL'].iloc[0]
                 tql_query1 = st.text_area(
-                    label="Please Type Query Here: ", height=None, value=sample_query1, key="0001223a")
+                    label="Please Build Your Own Query Here: ", height=None, value=sample_query1, key="0001223a")
 
                 if len(tql_query1) > 0:
                     df1 = tql_data(token, url_input, tql_query1)
@@ -139,11 +139,11 @@ if services_selected == "TQL Table Join Service":
             with col2:
                 st.subheader(f"TQL table2")
                 query_endpoint2 = st.selectbox(
-                    "Available Queries: ", tql_endpoint_options, key="0001221b")
+                    "Available Query Examples: ", tql_endpoint_options, key="0001221b")
                 sample_query2 = tql_options.loc[tql_options['tql_resource']
                                                 == query_endpoint2, 'TQL'].iloc[0]
                 tql_query2 = st.text_area(
-                    label="Please Type Query Here: ", height=None, value=sample_query2, key="0001223b")
+                    label="Please Build Your Own Query Here: ", height=None, value=sample_query2, key="0001223b")
 
                 if len(tql_query2) > 0:
                     df2 = tql_data(token, url_input, tql_query2)
