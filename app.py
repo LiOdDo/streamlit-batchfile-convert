@@ -249,7 +249,7 @@ if services_selected == "json-imports":
             st.text(f"The {file_to_import.name} import result is: ")
             st.write(data)
 if services_selected == "csv-imports":
-    st.subheader("Batch Import File Convert Services - **_csv2json_**")
+    st.subheader("convert **_csv2json_** batch file and import service")
     st.markdown(
         "Please define the **ENDPOINT** in the box and include * in front field names for lookups")
     box1, box2, box3 = st.columns(3)
