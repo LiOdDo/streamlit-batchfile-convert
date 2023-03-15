@@ -111,6 +111,23 @@ def import_data(url_input, user_pwd, file_to_import):
 
     return data
 
+def import_text(url_input, user_pwd, text_to_import):
+    token = get_token(
+        f"{url_input}rest/v1/auth", user_pwd)
+
+    payload = json.loads(f'{text_to_import}')
+
+    headers = {
+        'Authorization': 'Bearer '+token,
+        'Content-Type': 'application/json',
+        'Cookie': 'PHPSESSID=vqru8j08ho4oe1uaht3d6mikchqak2or'
+    }
+    response = requests.request(
+        "POST", f"{url_input}rest/v1/batch/file", headers=headers, json=payload)
+    data = response.json()
+
+    return data
+
 
 def single_report_export(token, url_input, report_template, accounts, start_date, end_date):
     if report_template is not None:
