@@ -268,6 +268,8 @@ if services_selected == "csv-imports":
         # To read file as bytes:
         if action_type != 'EXECUTE':
             bytes_data = convert_csv(uploaded_csv, endpoint, action_type)
+            st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+            st.write(bytes_data)
             json_data = json.dumps(bytes_data)
 
             if json_data is not None:
