@@ -238,7 +238,7 @@ if services_selected == "xlsx/csv to json conversion":
                 data=json.dumps(bytes_data),
                 file_name=f'{uploaded_csv.name.replace(".csv","")}-batch-file.json')
 
-if services_selected == "json imports":
+if services_selected == "json-imports":
     st.subheader(f"Data Import Services - TrackTik Internal Use Only")
     file_to_import = st.file_uploader(
         "please upload your json batch file")
@@ -248,7 +248,7 @@ if services_selected == "json imports":
             data = import_data(url_input, user_pwd, file_to_import)
             st.text(f"The {file_to_import.name} import result is: ")
             st.write(data)
-if services_selected == "csv imports":
+if services_selected == "csv-imports":
     st.subheader("Batch Import File Convert Services - **_csv2json_**")
     st.markdown(
         "Please define the **ENDPOINT** in the box and include * in front field names for lookups")
