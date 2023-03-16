@@ -227,7 +227,7 @@ if services_selected == "xlsx/csv to json conversion":
         endpoint = endpoint_selected
     with box2:
         action_type = st.selectbox(
-            "action type: ", ["REPLACE", "CREATE", "EXECUTE"])
+            "action type: ", ["REPLACE", "CREATE", "UPDATE", "EXECUTE"])
     with box3:
         action_name = st.text_input("action name: ", '')
 
@@ -274,7 +274,7 @@ if services_selected == "csv-imports":
         endpoint = endpoint_selected
     with box2:
         action_type = st.selectbox(
-            "action type: ", ["REPLACE", "CREATE", "EXECUTE"])
+            "action type: ", ["REPLACE", "CREATE", "UPDATE", "EXECUTE"])
     with box3:
         action_name = st.text_input("action name: ", '')
 
