@@ -49,9 +49,22 @@ services_selected = st.sidebar.radio(
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
+    st.subheader("Instruction")
+    st.markdown(
+        "The data services tool is built on-top of the TrackTik api which can handle data-related work, such as DATA EXPORT from api endpoints, TQL export, join data from 2 different TQL exports, data file conversion and data imports either json or csv."
+        "Please NOTE this tool is NOT running on TrackTik platform and it’s running on non-commercial server, it’s NOT for external usage and should NOT be shared with clients.")
+    st.subheader("Authentication")
+    st.markdown(
+        "Please add the portal URL in the configuration section and upload the json file which contains the user and password")
     st.subheader("Data Export")
     st.markdown(
-        "To export a collection of data objects, please provide URL and json formatted user and password file")
+        "API GET request at single data endpoint. All available data endpoints are listed. The relational data attributs are not exposed")
+    st.subheader("TQL")
+    st.markdown(
+        "TQL section provides both pre-built TQL queries and query input section where you can build TQL and fetch data")
+    st.subheader("TQL Table Join Service")
+    st.markdown(
+        "As TQL doesn't provide join function, this section will help join 2 different TQL query data into 1 table")
     st.subheader("xlsx2json And csv2json Conversion")
     st.markdown(
         "To convert a xlsx or a csv file into batch/file format, make sure following requirements are met")
@@ -59,9 +72,12 @@ if services_selected == "intro":
         "* For xlsx make sure all sheet/tab has a name, the name should be the endpoint. e.g. clients, positions, regions")
     st.markdown(
         "* For csv, make sure input the endpoint in the left side bar under endpoint section")
-    st.subheader("Data Import")
+    st.subheader("json Import")
     st.markdown(
-        "To use data import services, please add the portal URL address and username/password file. Then broswe and upload the batch json file")
+        "With batch/file json data, you can use this service to send API request to upload the data, which can be data creation and data update. Please make sure all the data follows TrackTik API specification for each data endpoint")
+    st.subheader("csv Import")
+    st.markdown(
+        "This service will upload the csv data file into your portal via TrackTik API. The logic is data tool will convert the csv file into batch/file json data and then upload data to portal via API. Please make sure the csv file is built according to data requirements and all attributes (columns and values) follow TrackTik API specification for each data endpoint")
 if services_selected == "data exports":
     if user_pwd is not None:
         st.subheader(f"Data Export Services")
