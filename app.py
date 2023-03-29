@@ -45,7 +45,7 @@ tql_endpoint_options = tql_options['tql_resource']
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
-    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "xlsx/csv to json conversion", "json-imports", "csv-imports", "TQL-Report-Pivot Service"])
+    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service","split-csv", "xlsx/csv to json conversion", "json-imports", "csv-imports", "TQL-Report-Pivot Service"])
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
@@ -200,7 +200,23 @@ if services_selected == "TQL Table Join Service":
                             mime='text/csv',
                         )
 
+if services_selected == "split-csv":
+    source_file = st.file_uploader("file to split")
+    split1, split2 = st.columns(2)
+    with split1:
+        splitsize = st.text_input("split size: ", '')
+    if source_file is not None:
+        if splitsize is not None:
 
+            for i, chunk in enumerate(pd.read_csv(source_file, chunksize=int(splitsize))):
+                st.download_button(
+                    label="Download data as CSV",
+                    data=chunk.to_csv(
+                        sep=',', encoding='utf-8', index=False),
+                    file_name=f'splited-data-export{i}.csv',
+                    mime='text/csv',
+                )
+                
 if services_selected == "xlsx/csv to json conversion":
     st.subheader("Batch Import File Convert Services - **_xlsx2json_**")
     st.markdown(
