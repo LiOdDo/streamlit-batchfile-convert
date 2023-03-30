@@ -4,7 +4,7 @@ import json
 import streamlit as st
 import time
 
-
+@st.cache
 def get_token(url, access):
 
     payload = access
@@ -19,7 +19,7 @@ def get_token(url, access):
 
     return token
 
-
+@st.cache
 def export_data(endpoint, user_pwd, url_input):
     params = None
     api_objects = pd.read_csv(
@@ -54,7 +54,7 @@ def export_data(endpoint, user_pwd, url_input):
 
     return df
 
-
+@st.cache
 def tql_data(token, url_input, tql_query):
 
     #    token = get_token(
@@ -93,7 +93,7 @@ def tql_table(self):
         submit = st.form_submit_button("run tql3")
 '''
 
-
+@st.cache
 def import_data(url_input, user_pwd, file_to_import):
     token = get_token(
         f"{url_input}rest/v1/auth", user_pwd)
@@ -111,6 +111,7 @@ def import_data(url_input, user_pwd, file_to_import):
 
     return data
 
+@st.cache
 def import_text(url_input, user_pwd, text_to_import):
     token = get_token(
         f"{url_input}rest/v1/auth", user_pwd)
