@@ -19,7 +19,6 @@ def get_token(url, access):
 
     return token
 
-@st.cache
 def export_data(endpoint, user_pwd, url_input):
     params = None
     api_objects = pd.read_csv(
