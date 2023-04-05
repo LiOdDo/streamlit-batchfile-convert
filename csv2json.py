@@ -36,7 +36,7 @@ def convert_csv(template_file, endpoint, action_type):
 
     data_source = pd.read_csv(template_file, dtype=str)
     data_source.fillna('', inplace=True)
-    source_to_import = {"onFailure": "ABORT",
+    source_to_import = {"onFailure": "CONTINUE",
                         "operations": []}
     lookup_list = []
     for col in data_source.columns:
