@@ -129,7 +129,7 @@ def import_text(url_input, user_pwd, text_to_import):
 
     return data
 
-
+@st.cache_data
 def single_report_export(token, url_input, report_template, accounts, start_date, end_date):
     if report_template is not None:
         if len(accounts) > 0:
@@ -177,7 +177,7 @@ def single_report_export(token, url_input, report_template, accounts, start_date
         #         mime="text/csv"
         #     )
 
-
+@st.cache_data
 def batch_report_export(token, url_input, report_metric_file):
     report_template = pd.read_csv(report_metric_file, dtype=str)
 
