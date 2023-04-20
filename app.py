@@ -348,7 +348,7 @@ if services_selected == "TQL-Report-Pivot Service":
                     for template in template_list:
                         report_data = single_report_export(
                             token, url_input, template, accounts, startDate, endDate)
-                        st.dataframe(report_data, 2000, 200)
+                        #st.dataframe(report_data, 2000, 200)
                         st.download_button(
                             label=f"Download report {template} data as CSV",
                             data=report_data.to_csv(
