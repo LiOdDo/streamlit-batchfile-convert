@@ -332,7 +332,7 @@ if services_selected == "TQL-Report-Pivot Service":
             col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
             with col1:
                 reportTemplate = st.text_input(
-                    "report template is: ", '', key="0001224232a")
+                    "report template is: ", key="0001224232a")
             with col2:
                 accounts = st.text_input(
                     "account id list is: ", '', key="0001224232b")
@@ -344,17 +344,18 @@ if services_selected == "TQL-Report-Pivot Service":
             submit = st.button('Export Report')
             if submit:
                 if reportTemplate is not None:
-                    report_data = single_report_export(
-                        token, url_input, reportTemplate, accounts, startDate, endDate)
-                    st.text(f"The report export data: ")
-                    st.dataframe(report_data, 2000, 200)
-                    st.download_button(
-                        label=f"Download report {reportTemplate} data as CSV",
-                        data=report_data.to_csv(
-                            sep=',', encoding='utf-8', index=True),
-                        file_name=f"report_{reportTemplate}_export.csv",
-                        mime='text/csv',
-                    )
+                    template_list = reportTemplate.split(",")
+                    for template in template_list:
+                        report_data = single_report_export(
+                            token, url_input, template, accounts, startDate, endDate)
+                        st.dataframe(report_data, 2000, 200)
+                        st.download_button(
+                            label=f"Download report {template} data as CSV",
+                            data=report_data.to_csv(
+                                sep=',', encoding='utf-8', index=True),
+                            file_name=f"report_{template}_export.csv",
+                            mime='text/csv',
+                        )
 
             # with open("tql_report_batch_export_beta1.csv", newline='', encoding='utf-8') as file:
             #     btn = st.download_button(
