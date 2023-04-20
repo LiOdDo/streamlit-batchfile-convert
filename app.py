@@ -332,7 +332,7 @@ if services_selected == "TQL-Report-Pivot Service":
             col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
             with col1:
                 reportTemplate = st.text_input(
-                    "report template is: ", key="0001224232a")
+                    "report template id list is: ", key="0001224232a")
             with col2:
                 accounts = st.text_input(
                     "account id list is: ", '', key="0001224232b")
