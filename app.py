@@ -359,7 +359,7 @@ if services_selected == "TQL-Single-Report-Pivot Service":
                         mime='text/csv',
                     )
 
-                    if services_selected == "TQL-Multi-Reports-Pivot Service":
+if services_selected == "TQL-Multi-Reports-Pivot Service":
     if user_pwd is not None:
         if url_input is not None:
             token = get_token(f"{url_input}rest/v1/auth", user_pwd)
