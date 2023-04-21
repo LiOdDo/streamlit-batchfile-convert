@@ -377,7 +377,7 @@ if services_selected == "TQL-Multi-Reports-Pivot Service":
             with col4:
                 endDate = st.text_input("end date: ", '', key="0001224232d")
 
-            if len(startDate) > 0 is and len(endDate) > 0:
+            if len(startDate) > 0 and len(endDate) > 0:
                 if len(reportTemplate) > 0:
                     template_list = reportTemplate.split(",")
                     for i, template in enumerate(template_list):
