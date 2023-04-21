@@ -45,7 +45,7 @@ tql_endpoint_options = tql_options['tql_resource']
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
-    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service","split-csv", "xlsx/csv to json conversion", "json-imports", "csv-imports", "TQL-Report-Pivot Service"])
+    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service","split-csv", "xlsx/csv to json conversion", "json-imports", "csv-imports", "TQL-Single-Report-Pivot Service"])
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
@@ -325,7 +325,7 @@ if services_selected == "csv-imports":
                     st.text(f"The {endpoint} import result is: ")
                     st.write(data)
 
-if services_selected == "TQL-Report-Pivot Service":
+if services_selected == "TQL-Single-Report-Pivot Service":
     st.subheader("report value export service")
     st.markdown(
         "make sure all the required fields filled up, for reporttemplate list and account list please separate by , and leave NO space")
@@ -347,18 +347,17 @@ if services_selected == "TQL-Report-Pivot Service":
             submit = st.button('Export Report')
             if submit:
                 if reportTemplate is not None:
-                    template_list = reportTemplate.split(",")
-                    for template in template_list:
-                        report_data = single_report_export(
-                            token, url_input, template, accounts, startDate, endDate)
-                        #st.dataframe(report_data, 2000, 200)
-                        st.download_button(
-                            label=f"Download report {template} data as CSV",
-                            data=report_data.to_csv(
-                                sep=',', encoding='utf-8', index=True),
-                            file_name=f"report_{template}_export.csv",
-                            mime='text/csv',
-                        )
+                    report_data = single_report_export(
+                        token, url_input, reportTemplate, accounts, startDate, endDate)
+                    st.text(f"The report export data: ")
+                    st.dataframe(report_data, 2000, 500)
+                    st.download_button(
+                        label=f"Download report {reportTemplate} data as CSV",
+                        data=report_data.to_csv(
+                            sep=',', encoding='utf-8', index=True),
+                        file_name=f"report_{reportTemplate}_export.csv",
+                        mime='text/csv',
+                    )
 
             # with open("tql_report_batch_export_beta1.csv", newline='', encoding='utf-8') as file:
             #     btn = st.download_button(
