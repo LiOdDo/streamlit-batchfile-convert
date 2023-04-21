@@ -45,7 +45,7 @@ tql_endpoint_options = tql_options['tql_resource']
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
-    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service","split-csv", "xlsx/csv to json conversion", "json-imports", "csv-imports", "TQL-Single-Report-Pivot Service"])
+    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service","split-csv", "xlsx/csv to json conversion", "json-imports", "csv-imports", "TQL-Single-Report-Pivot Service","TQL-Multi-Reports-Pivot Service"])
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
@@ -328,7 +328,7 @@ if services_selected == "csv-imports":
 if services_selected == "TQL-Single-Report-Pivot Service":
     st.subheader("report value export service")
     st.markdown(
-        "make sure all the required fields filled up, for reporttemplate list and account list please separate by , and leave NO space")
+        "make sure all the required fields filled up, for report template list and account list please separate by ',' and leave NO space")
     if user_pwd is not None:
         if url_input is not None:
             token = get_token(f"{url_input}rest/v1/auth", user_pwd)
@@ -359,6 +359,36 @@ if services_selected == "TQL-Single-Report-Pivot Service":
                         mime='text/csv',
                     )
 
+                    if services_selected == "TQL-Multi-Reports-Pivot Service":
+    if user_pwd is not None:
+        if url_input is not None:
+            token = get_token(f"{url_input}rest/v1/auth", user_pwd)
+            col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
+            with col1:
+                reportTemplate = st.text_input(
+                    "report template is: ", key="0001224232a")
+            with col2:
+                accounts = st.text_input(
+                    "account id list is: ", '', key="0001224232b")
+            with col3:
+                startDate = st.text_input(
+                    "start date: ", '', key="0001224232c")
+            with col4:
+                endDate = st.text_input("end date: ", '', key="0001224232d")
+
+            if startDate is not None and endDate is not None:
+                if reportTemplate is not None:
+                    template_list = reportTemplate.split(",")
+                    for i, template in enumerate(template_list):
+                        report_data = single_report_export(
+                            token, url_input, template, accounts, startDate, endDate)
+                        st.download_button(
+                            label=f"Download report {template} data as CSV",
+                            data=report_data.to_csv(
+                                sep=',', encoding='utf-8', index=True),
+                            file_name=f"report_{template}_export.csv",
+                            mime='text/csv',
+                        )
             # with open("tql_report_batch_export_beta1.csv", newline='', encoding='utf-8') as file:
             #     btn = st.download_button(
             #         label="download demo report metric file_https://innovation.staffr.net/",
