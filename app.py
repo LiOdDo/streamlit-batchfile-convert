@@ -326,9 +326,7 @@ if services_selected == "csv-imports":
                     st.write(data)
 
 if services_selected == "TQL-Single-Report-Pivot Service":
-    st.subheader("report value export service")
-    st.markdown(
-        "make sure all the required fields filled up, for report template list and account list please separate by ',' and leave NO space")
+
     if user_pwd is not None:
         if url_input is not None:
             token = get_token(f"{url_input}rest/v1/auth", user_pwd)
@@ -360,6 +358,9 @@ if services_selected == "TQL-Single-Report-Pivot Service":
                     )
 
 if services_selected == "TQL-Multi-Reports-Pivot Service":
+    st.subheader("report value export service")
+    st.markdown(
+        "make sure all the required fields filled up, for report template list and account list please separate by ',' and leave NO space")
     if user_pwd is not None:
         if url_input is not None:
             token = get_token(f"{url_input}rest/v1/auth", user_pwd)
@@ -376,8 +377,8 @@ if services_selected == "TQL-Multi-Reports-Pivot Service":
             with col4:
                 endDate = st.text_input("end date: ", '', key="0001224232d")
 
-            if startDate is not None and endDate is not None:
-                if reportTemplate is not None:
+            if len(startDate) > 0 is and len(endDate) > 0:
+                if len(reportTemplate) > 0:
                     template_list = reportTemplate.split(",")
                     for i, template in enumerate(template_list):
                         report_data = single_report_export(
