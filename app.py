@@ -326,21 +326,24 @@ if services_selected == "csv-imports":
                     st.write(data)
 
 if services_selected == "TQL-Report-Pivot Service":
+    st.subheader("report value export service")
+    st.markdown(
+        "make sure all the required fields filled up, for reporttemplate list and account list please separate by , and leave NO space")
     if user_pwd is not None:
         if url_input is not None:
             token = get_token(f"{url_input}rest/v1/auth", user_pwd)
             col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
             with col1:
                 reportTemplate = st.text_input(
-                    "report template id list is: ", key="0001224232a")
+                    "*report template id list is: ", key="0001224232a")
             with col2:
                 accounts = st.text_input(
                     "account id list is: ", '', key="0001224232b")
             with col3:
                 startDate = st.text_input(
-                    "start date: ", '', key="0001224232c")
+                    "*start date: ", '', key="0001224232c")
             with col4:
-                endDate = st.text_input("end date: ", '', key="0001224232d")
+                endDate = st.text_input("*end date: ", '', key="0001224232d")
             submit = st.button('Export Report')
             if submit:
                 if reportTemplate is not None:
