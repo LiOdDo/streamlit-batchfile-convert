@@ -199,7 +199,7 @@ task-types,id,"name,dispatchable,schedulable,schedulableSiteTask,billable,prefix
 task-type-skills,id,"taskType,skill,id,uri,resourceType"
 tax-classes,id,"name,status,customId,region,items,id,uri,resourceType"
 tax-class-items,id,"percentage,code,number,taxClass,id,uri,resourceType"
-tax-locations,id,"customId,name,isGlobal,region,status,externalIdObject.paycorDepartmentId,externalIdObject.paycorDepartmentCode,id,createdBy,createdOn,updatedBy,updatedOn,uri,resourceType"
+tax-locations,id,"customId,name,isGlobal,region,status,id,createdBy,createdOn,updatedBy,updatedOn,uri,resourceType"
 twilio-accounts,id,"id,region,sid,token,messagingServiceSid,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
 user-login-logs,id,"user,loggedInOn,ip,userAgent,method,id,uri,resourceType"
 user-notification-settings,id,"communications,user,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
