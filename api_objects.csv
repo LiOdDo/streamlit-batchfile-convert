@@ -1,7 +1,7 @@
 endpoint,lookup,fields
 accounts,id,"name,customId,type,subType,address,region,notes,timeZone,status,positions,allowedAreas,restrictedAreas,ipWhitelist,dispatchSla,closedDate,tags,emergencyContacts,id,uri,resourceType,avatar,createdBy,createdOn,updatedBy,updatedOn"
 addresses,id,"addressLine1,addressLine2,city,country,state,postalCode,latitude,longitude,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
-alarm-connections,id,"customId,alarmOrganization,client,defaultTaskType,status,id,createdBy,createdOn,updatedBy,updatedOn,uri,resourceType"
+alarm-connections,id,"customId,alarmOrganization,client,defaultTaskType,status,id,createdBy,createdOn,updatedBy,updatedOn,uri"
 alarms,id,"customId,alarmConnectionCustomId,alarmTypeCode,alarmOrganization,location,triggeredOn,registeredOn,notes,onSiteInformation,alarmConnection,dispatchTask,status,id,createdBy,createdOn,updatedBy,updatedOn,uri,resourceType"
 alarm-types,id,"customId,code,name,alarmOrganization,taskType,status,id,createdBy,createdOn,updatedBy,updatedOn,uri,resourceType"
 app-licenses,id,"name,number,account,position,user,lastLatitude,lastLongitude,startedOn,status,applicationId,applicationVersion,deviceModel,deviceOS,deviceIMEI,installationCode,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
