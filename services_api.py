@@ -4,7 +4,7 @@ import json
 import streamlit as st
 import time
 
-
+@st.cache
 def get_token(url, access):
 
     payload = access
@@ -54,7 +54,7 @@ def export_data(endpoint, user_pwd, url_input):
 
     return df
 
-
+@st.cache
 def tql_data(token, url_input, tql_query):
 
     #    token = get_token(
