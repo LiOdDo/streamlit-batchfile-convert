@@ -4,7 +4,7 @@ import json
 import streamlit as st
 import time
 
-@st.cache
+
 def get_token(url, access):
 
     payload = access
