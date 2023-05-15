@@ -170,7 +170,7 @@ report-flag-template-fields,id,"reportFlagTemplate,label,name,type,required,admi
 report-flag-templates,id,"name,details,tag,reportFields,adminOnly,reports,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn,defaultLanguage,translatable"
 reports,id,"reportTemplate,reportDateTime,submittedOn,account,position,reportFields,approvedOn,status,approvedBy,checkpoint,reportFlag,siteLocation,geoLocation,comments,tourSession,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn,timeZone"
 report-template-fields,id,"reportTemplate,label,name,type,required,adminOnly,displayOrder,extra,listItems,isDispatcherField,fieldTag,confidential,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
-report-templates,id,"name,details,tag,reportFields,adminOnly,reports,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn,defaultLanguage,translatable"
+report-templates,id,"name,details,tag,adminOnly,id,defaultLanguage,translatable"
 revenue-processor-occurrences,id,"status,executionStartedOn,executionEndedOn,startedOn,endedOn,site,processedItems,batchId,triggeredFrom,id,uri,resourceType,createdBy,createdOn,updatedBy,updatedOn"
 role-access-policies,id,"authorization,region,role,scenarioCode,id,uri,resourceType"
 role-permissions,id,"permission,role,id,uri,resourceType"
