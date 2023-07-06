@@ -213,7 +213,7 @@ if services_selected == "split-csv":
                     label="Download data as CSV",
                     data=chunk.to_csv(
                         sep=',', encoding='utf-8', index=False),
-                    file_name=f'splited-data-export{i}.csv',
+                    file_name=f'{source_file.name}-{i}.csv',
                     mime='text/csv',
                 )
                 
