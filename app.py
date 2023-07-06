@@ -210,7 +210,7 @@ if services_selected == "split-csv":
 
             for i, chunk in enumerate(pd.read_csv(source_file, chunksize=int(splitsize))):
                 st.download_button(
-                    label="Download data as CSV",
+                    label=f"Download {source_file.name} as CSV",
                     data=chunk.to_csv(
                         sep=',', encoding='utf-8', index=False),
                     file_name=f'{source_file.name}-{i}.csv',
