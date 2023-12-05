@@ -45,7 +45,7 @@ tql_endpoint_options = tql_options['tql_resource']
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
-    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service","split-csv", "xlsx/csv to json conversion", "TQL-Single-Report-Pivot Service","TQL-Multi-Reports-Pivot Service"])
+    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service","split-csv", "xlsx/csv to json conversion", "json-import", "csv-import", "TQL-Single-Report-Pivot Service","TQL-Multi-Reports-Pivot Service"])
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
