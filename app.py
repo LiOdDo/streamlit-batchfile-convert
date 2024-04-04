@@ -8,17 +8,24 @@ import json
 #import sessionState
 from xlsx2json import convert_xlsx
 from csv2json import convert_csv, convert_csv_action_name
-from services_api import get_token, export_data, tql_data,single_report_export, import_data, import_text
+from services_api import export_data, tql_data, import_data, import_text, single_report_export
 
 # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="API BETA PLAYGROUND",
                    page_icon=":pie_chart:", layout="wide")
 
 st.sidebar.subheader("Configuration :")
+
+
 url_input = st.sidebar.text_input(
     "Please add the portal URL (include the ending /): ", '')
-user_pwd = st.sidebar.file_uploader(
-    "Please upload your binary format user and password file")
+#user_pwd = st.sidebar.file_uploader(
+#    "Please upload your binary format user and password file")
+token = st.sidebar.text_input(
+    "Paste the api token here", '')
+#if user_pwd is not None:
+#    token = get_token(f"{url_input}rest/v1/auth", user_pwd)
+
 
 # if user_pwd is not None:
 #    if url_input is not None:
@@ -45,7 +52,7 @@ tql_endpoint_options = tql_options['tql_resource']
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
-    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service","split-csv", "xlsx/csv to json conversion", "json-imports", "csv-imports", "TQL-Single-Report-Pivot Service","TQL-Multi-Reports-Pivot Service"])
+    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "split-csv", "xlsx/csv to json conversion", "json-imports", "csv-imports", "TQL-Single-Report-Pivot Service", "TQL-Multi-Reports-Pivot Service"])
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
@@ -79,14 +86,16 @@ if services_selected == "intro":
     st.markdown(
         "This service will upload the csv data file into your portal via TrackTik API. The logic is data tool will convert the csv file into batch/file json data and then upload data to portal via API. Please make sure the csv file is built according to data requirements and all attributes (columns and values) follow TrackTik API specification for each data endpoint")
 if services_selected == "data exports":
-    if user_pwd is not None:
+    if token is not None:
+        # token = get_token(
+        #    f"{url_input}rest/v1/auth", user_pwd)
         st.subheader(f"Data Export Services")
         st.subheader("Please Choose Endpoint:")
         endpoint_selected = st.selectbox("Endpoints: ", endpoint_options)
         endpoint = endpoint_selected
         submit = st.button('Export Data')
         if submit:
-            df = export_data(endpoint, user_pwd, url_input)
+            df = export_data(endpoint, token, url_input)
             st.text(f"The {endpoint} data: ")
             st.dataframe(df)
 
@@ -99,10 +108,11 @@ if services_selected == "data exports":
 
 if services_selected == "TQL":
 
-    if user_pwd is not None:
-        if url_input is not None:
-            token = get_token(
-                f"{url_input}rest/v1/auth", user_pwd)
+    if token is not None:
+
+        # if url_input is not None:
+        #    token = get_token(
+        #        f"{url_input}rest/v1/auth", user_pwd)
 
         st.subheader(f"TQL Query Services")
         query_endpoint = st.selectbox(
@@ -125,10 +135,8 @@ if services_selected == "TQL":
             )
 
 if services_selected == "TQL Table Join Service":
-    if user_pwd is not None:
+    if token is not None:
         if url_input is not None:
-            token = get_token(
-                f"{url_input}rest/v1/auth", user_pwd)
 
             col1, col2 = st.columns(2)
             with col1:
@@ -210,13 +218,13 @@ if services_selected == "split-csv":
 
             for i, chunk in enumerate(pd.read_csv(source_file, chunksize=int(splitsize))):
                 st.download_button(
-                    label=f'Download {source_file.name}',
+                    label="Download data as CSV",
                     data=chunk.to_csv(
                         sep=',', encoding='utf-8', index=False),
-                    file_name=f'{source_file.name.replace(".csv","")}-{i}.csv',
+                    file_name=f'splited-data-export{i}.csv',
                     mime='text/csv',
                 )
-                
+
 if services_selected == "xlsx/csv to json conversion":
     st.subheader("Batch Import File Convert Services - **_xlsx2json_**")
     st.markdown(
@@ -277,7 +285,7 @@ if services_selected == "json-imports":
     if file_to_import is not None:
         submit = st.button('Import Selected File')
         if submit:
-            data = import_data(url_input, user_pwd, file_to_import)
+            data = import_data(url_input, token, file_to_import)
             st.text(f"The {file_to_import.name} import result is: ")
             st.write(data)
 if services_selected == "csv-imports":
@@ -307,7 +315,7 @@ if services_selected == "csv-imports":
             if json_data is not None:
                 submit = st.button('Import Selected File')
                 if submit:
-                    data = import_text(url_input, user_pwd, json_data)
+                    data = import_text(url_input, token, json_data)
                     st.text(f"The {endpoint} import result is: ")
                     st.write(data)
 
@@ -321,15 +329,15 @@ if services_selected == "csv-imports":
             if bytes_data is not None:
                 submit = st.button('Import Selected File')
                 if submit:
-                    data = import_text(url_input, user_pwd, json_data)
+                    data = import_text(url_input, token, json_data)
                     st.text(f"The {endpoint} import result is: ")
                     st.write(data)
 
 if services_selected == "TQL-Single-Report-Pivot Service":
 
-    if user_pwd is not None:
+    if token is not None:
         if url_input is not None:
-            token = get_token(f"{url_input}rest/v1/auth", user_pwd)
+           
             col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
             with col1:
                 reportTemplate = st.text_input(
@@ -361,9 +369,9 @@ if services_selected == "TQL-Multi-Reports-Pivot Service":
     st.subheader("report value export service")
     st.markdown(
         "make sure all the required fields filled up, for report template list and account list please separate by ',' and leave NO space")
-    if user_pwd is not None:
+    if token is not None:
         if url_input is not None:
-            token = get_token(f"{url_input}rest/v1/auth", user_pwd)
+            # token = get_token(f"{url_input}rest/v1/auth", user_pwd)
             col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
             with col1:
                 reportTemplate = st.text_input(
