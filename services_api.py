@@ -20,7 +20,7 @@ def get_token(url, access):
     return token
 
 
-def export_data(endpoint, user_pwd, url_input):
+def export_data(endpoint, token, url_input):
     params = None
     api_objects = pd.read_csv(
         'api_objects.csv', dtype=str)
@@ -35,8 +35,6 @@ def export_data(endpoint, user_pwd, url_input):
         params if params != None else "resource=" + \
         endpoint+"&lookups=" + lookup+"&fields="+fields
 
-    token = get_token(
-        f"{url_input}rest/v1/auth", user_pwd)
 
     payload = {}
     headers = {
@@ -94,9 +92,7 @@ def tql_table(self):
 '''
 
 @st.cache_data
-def import_data(url_input, user_pwd, file_to_import):
-    token = get_token(
-        f"{url_input}rest/v1/auth", user_pwd)
+def import_data(url_input, token, file_to_import):
 
     payload = json.load(file_to_import)
 
@@ -112,9 +108,8 @@ def import_data(url_input, user_pwd, file_to_import):
     return data
 
 
-def import_text(url_input, user_pwd, text_to_import):
-    token = get_token(
-        f"{url_input}rest/v1/auth", user_pwd)
+def import_text(url_input, token, text_to_import):
+
 
     payload = json.loads(f'{text_to_import}')
 
