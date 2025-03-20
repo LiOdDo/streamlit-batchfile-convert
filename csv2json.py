@@ -48,12 +48,19 @@ def convert_csv(template_file, endpoint, action_type):
     data_source.fillna('', inplace=True)
     total_source = len(data_source[data_source.columns[0]])
 
-    for i in range(total_source):
-        data_temp = build_dict(data_source, i)
-        lookup_temp = build_lookup(lookup_list, data_source, i)
-        source_to_import['operations'].append({'lookup': lookup_temp,
-                                               'action': f'{action_type}', 'resource': f'{endpoint}',
-                                               'data': data_temp})
+    if lookup_list == []:
+        for i in range(total_source):
+            data_temp = build_dict(data_source, i)
+            source_to_import['operations'].append({'action': f'{action_type}', 'resource': f'{endpoint}',
+                                                   'data': data_temp})
+    else:
+        for i in range(total_source):
+            data_temp = build_dict(data_source, i)
+            lookup_temp = build_lookup(lookup_list, data_source, i)
+            source_to_import['operations'].append({'lookup': lookup_temp,
+                                                   'action': f'{action_type}', 'resource': f'{endpoint}',
+                                                   'data': data_temp})
+
     return source_to_import
 
 
