@@ -224,6 +224,7 @@ if services_selected == "split-csv":
                     file_name=f'splited-data-export{i}.csv',
                     mime='text/csv',
                 )
+              st.dataframe(chunk, 2000, 200)
 
 if services_selected == "xlsx/csv to json conversion":
     st.subheader("Batch Import File Convert Services - **_xlsx2json_**")
