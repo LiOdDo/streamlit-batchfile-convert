@@ -246,7 +246,7 @@ if services_selected == "xlsx/csv to json conversion":
     st.subheader("Batch Import File Convert Services - **_csv2json_**")
     st.markdown(
         "Please define the **ENDPOINT** in the box and include * in front field names for lookups")
-    box1, box2, box3 = st.columns(3)
+    box1, box2, box3, box4 = st.columns(4)
     with box1:
         endpoint_selected = st.selectbox("Endpoints: ", endpoint_options)
         endpoint = endpoint_selected
@@ -255,6 +255,8 @@ if services_selected == "xlsx/csv to json conversion":
             "action type: ", ["REPLACE", "CREATE", "UPDATE", "EXECUTE"])
     with box3:
         action_name = st.text_input("action name: ", '')
+    with box4:
+        list_field = st.text_input("array field: ", '')
 
     uploaded_csv = st.file_uploader(
         "Please upload the csv file to convert into BATCH import json file")
@@ -262,22 +264,50 @@ if services_selected == "xlsx/csv to json conversion":
         # To read file as bytes:
         if action_type != 'EXECUTE':
             bytes_data = convert_csv(uploaded_csv, endpoint, action_type)
-            st.text(f"The {uploaded_csv.name} converted JSON file is: ")
-            st.write(bytes_data)
-            st.download_button(
-                label="Download json",
-                data=json.dumps(bytes_data),
-                file_name=f'{uploaded_csv.name.replace(".csv","")}-batch-file.json'
-            )
+            if list_field == '':
+                st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+                st.write(bytes_data)
+                st.download_button(
+                    label="Download json",
+                    data=json.dumps(bytes_data),
+                    file_name=f'{uploaded_csv.name.replace(".csv","")}-batch-file.json'
+                )
+              
+            if list_field != '':
+                for item in bytes_data['operations']:
+                    a=list(item['data'][f'{list_field}'].values())
+                    item['data']['client'] = a
+                st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+                st.write(bytes_data)
+                st.download_button(
+                    label="Download json",
+                    data=json.dumps(bytes_data),
+                    file_name=f'{uploaded_csv.name.replace(".csv","")}-batch-file.json'
+                )
+        
+
         if action_type == 'EXECUTE':
             bytes_data = convert_csv_action_name(
                 uploaded_csv, endpoint, action_name)
-            st.text(f"The {uploaded_csv.name} converted JSON file is: ")
-            st.write(bytes_data)
-            st.download_button(
-                label="Download json",
-                data=json.dumps(bytes_data),
-                file_name=f'{uploaded_csv.name.replace(".csv","")}-batch-file.json')
+            if list_field == '':
+                st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+                st.write(bytes_data)
+                st.download_button(
+                    label="Download json",
+                    data=json.dumps(bytes_data),
+                    file_name=f'{uploaded_csv.name.replace(".csv","")}-batch-file.json'
+                )
+            if list_field != '':
+                for item in bytes_data['operations']:
+                    a=list(item['data'][f'{list_field}'].values())
+                    item['data']['client'] = a
+                st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+                st.write(bytes_data)
+                st.download_button(
+                    label="Download json",
+                    data=json.dumps(bytes_data),
+                    file_name=f'{uploaded_csv.name.replace(".csv","")}-batch-file.json'
+                )
 
 if services_selected == "json-imports":
     st.subheader(f"Data Import Services - TrackTik Internal Use Only")
