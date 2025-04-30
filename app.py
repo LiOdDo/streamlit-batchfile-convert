@@ -248,7 +248,7 @@ if services_selected == "xlsx/csv to json conversion":
         "Please define the **ENDPOINT** in the box and include * in front field names for lookups")
     box1, box2, box3, box4 = st.columns(4)
     with box1:
-        endpoint_selected = st.selectbox("Endpoints: ", endpoint_options)
+        endpoint_selected = st.selectbox("endpoints: ", endpoint_options)
         endpoint = endpoint_selected
     with box2:
         action_type = st.selectbox(
@@ -325,7 +325,7 @@ if services_selected == "csv-imports":
         "Please define the **ENDPOINT** in the box and include * in front field names for lookups")
     box1, box2, box3 = st.columns(3)
     with box1:
-        endpoint_selected = st.selectbox("Endpoints: ", endpoint_options)
+        endpoint_selected = st.selectbox("endpoints: ", endpoint_options)
         endpoint = endpoint_selected
     with box2:
         action_type = st.selectbox(
