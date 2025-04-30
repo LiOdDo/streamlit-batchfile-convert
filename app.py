@@ -323,7 +323,7 @@ if services_selected == "csv-imports":
     st.subheader("convert **_csv2json_** batch file and import service")
     st.markdown(
         "Please define the **ENDPOINT** in the box and include * in front field names for lookups")
-    box1, box2, box3 = st.columns(3)
+    box1, box2, box3, box4 = st.columns(4)
     with box1:
         endpoint_selected = st.selectbox("endpoints: ", endpoint_options)
         endpoint = endpoint_selected
@@ -332,6 +332,8 @@ if services_selected == "csv-imports":
             "action type: ", ["REPLACE", "CREATE", "UPDATE", "EXECUTE"])
     with box3:
         action_name = st.text_input("action name: ", '')
+    with box4:
+        list_field = st.text_input("array field: ", '')
 
     uploaded_csv = st.file_uploader(
         "Please upload the csv file to convert into BATCH import json file")
@@ -339,9 +341,20 @@ if services_selected == "csv-imports":
         # To read file as bytes:
         if action_type != 'EXECUTE':
             bytes_data = convert_csv(uploaded_csv, endpoint, action_type)
-            st.text(f"The {uploaded_csv.name} converted JSON file is: ")
-            st.write(bytes_data)
-            json_data = json.dumps(bytes_data)
+            if list_field == '':
+                #st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+                #st.write(bytes_data)
+                st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+                st.write(bytes_data)
+                json_data = json.dumps(bytes_data)
+
+            if list_field != '':
+                for item in bytes_data['operations']:
+                    a=list(item['data'][f'{list_field}'].values())
+                    item['data']['client'] = a
+                st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+                st.write(bytes_data)
+                json_data = json.dumps(bytes_data)
 
             if json_data is not None:
                 submit = st.button('Import Selected File')
@@ -353,11 +366,22 @@ if services_selected == "csv-imports":
         if action_type == 'EXECUTE':
             bytes_data = convert_csv_action_name(
                 uploaded_csv, endpoint, action_name)
-            st.text(f"The {uploaded_csv.name} converted JSON file is: ")
-            st.write(bytes_data)
-            json_data = json.dumps(bytes_data)
+            if list_field == '':
+                #st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+                #st.write(bytes_data)
+                st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+                st.write(bytes_data)
+                json_data = json.dumps(bytes_data)
 
-            if bytes_data is not None:
+            if list_field != '':
+                for item in bytes_data['operations']:
+                    a=list(item['data'][f'{list_field}'].values())
+                    item['data']['client'] = a
+                st.text(f"The {uploaded_csv.name} converted JSON file is: ")
+                st.write(bytes_data)
+                json_data = json.dumps(bytes_data)
+
+            if json_data is not None:
                 submit = st.button('Import Selected File')
                 if submit:
                     data = import_text(url_input, token, json_data)
