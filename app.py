@@ -216,13 +216,13 @@ if services_selected == "split-csv":
     if source_file is not None:
         if splitsize is not None:
 
-            for i, chunk in enumerate(pd.read_csv(source_file, chunksize=int(splitsize))):
+            for i, chunk in enumerate(pd.read_csv(source_file, chunksize=int(splitsize),encoding='utf-8')):
                 st.download_button(
                     label="Download data as CSV",
                     data=chunk.to_csv(
                         sep=',', encoding='utf-8', index=False),
                     file_name=f'splited-data-export{i}.csv',
-                    mime='text/csv',
+                    mime='application/csv',
                 )
                 st.dataframe(chunk, 2000, 200)
 
@@ -265,6 +265,7 @@ if services_selected == "xlsx/csv to json conversion":
         if action_type != 'EXECUTE':
             bytes_data = convert_csv(uploaded_csv, endpoint, action_type)
             if list_field == '':
+                
                 st.text(f"The {uploaded_csv.name} converted JSON file is: ")
                 st.write(bytes_data)
                 st.download_button(
@@ -272,7 +273,6 @@ if services_selected == "xlsx/csv to json conversion":
                     data=json.dumps(bytes_data),
                     file_name=f'{uploaded_csv.name.replace(".csv","")}-batch-file.json'
                 )
-              
             if list_field != '':
                 for item in bytes_data['operations']:
                     a=list(item['data'][f'{list_field}'].values())
@@ -284,6 +284,7 @@ if services_selected == "xlsx/csv to json conversion":
                         
                     else:
                         item['data'][f'{list_field}'] = a
+                
                 st.text(f"The {uploaded_csv.name} converted JSON file is: ")
                 st.write(bytes_data)
                 st.download_button(
@@ -297,6 +298,7 @@ if services_selected == "xlsx/csv to json conversion":
             bytes_data = convert_csv_action_name(
                 uploaded_csv, endpoint, action_name)
             if list_field == '':
+                
                 st.text(f"The {uploaded_csv.name} converted JSON file is: ")
                 st.write(bytes_data)
                 st.download_button(
@@ -315,6 +317,7 @@ if services_selected == "xlsx/csv to json conversion":
                         
                     else:
                         item['data'][f'{list_field}'] = a
+                
                 st.text(f"The {uploaded_csv.name} converted JSON file is: ")
                 st.write(bytes_data)
                 st.download_button(
@@ -322,6 +325,8 @@ if services_selected == "xlsx/csv to json conversion":
                     data=json.dumps(bytes_data),
                     file_name=f'{uploaded_csv.name.replace(".csv","")}-batch-file.json'
                 )
+
+
 
 if services_selected == "json-imports":
     st.subheader(f"Data Import Services - TrackTik Internal Use Only")
@@ -346,6 +351,7 @@ if services_selected == "csv-imports":
             "action type: ", ["REPLACE", "CREATE", "UPDATE", "EXECUTE"])
     with box3:
         action_name = st.text_input("action name: ", '')
+
     with box4:
         list_field = st.text_input("array field: ", '')
 
@@ -355,6 +361,7 @@ if services_selected == "csv-imports":
         # To read file as bytes:
         if action_type != 'EXECUTE':
             bytes_data = convert_csv(uploaded_csv, endpoint, action_type)
+            
             if list_field == '':
                 #st.text(f"The {uploaded_csv.name} converted JSON file is: ")
                 #st.write(bytes_data)
@@ -365,6 +372,7 @@ if services_selected == "csv-imports":
             if list_field != '':
                 for item in bytes_data['operations']:
                     a=list(item['data'][f'{list_field}'].values())
+                    
                     if '{' in a[0]:
                         list_dict = []
                         for i in a:
@@ -373,6 +381,7 @@ if services_selected == "csv-imports":
                         
                     else:
                         item['data'][f'{list_field}'] = a
+                    
                 st.text(f"The {uploaded_csv.name} converted JSON file is: ")
                 st.write(bytes_data)
                 json_data = json.dumps(bytes_data)
@@ -409,7 +418,7 @@ if services_selected == "csv-imports":
                 st.write(bytes_data)
                 json_data = json.dumps(bytes_data)
 
-            if json_data is not None:
+            if bytes_data is not None:
                 submit = st.button('Import Selected File')
                 if submit:
                     data = import_text(url_input, token, json_data)
