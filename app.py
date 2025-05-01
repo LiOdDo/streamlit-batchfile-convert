@@ -276,7 +276,14 @@ if services_selected == "xlsx/csv to json conversion":
             if list_field != '':
                 for item in bytes_data['operations']:
                     a=list(item['data'][f'{list_field}'].values())
-                    item['data'][f'{list_field}'] = a
+                    if '{' in a[0]:
+                        list_dict = []
+                        for i in a:
+                            list_dict.append(json.loads(i))
+                        item['data'][f'{list_field}'] = list_dict
+                        
+                    else:
+                        item['data'][f'{list_field}'] = a
                 st.text(f"The {uploaded_csv.name} converted JSON file is: ")
                 st.write(bytes_data)
                 st.download_button(
@@ -300,7 +307,14 @@ if services_selected == "xlsx/csv to json conversion":
             if list_field != '':
                 for item in bytes_data['operations']:
                     a=list(item['data'][f'{list_field}'].values())
-                    item['data'][f'{list_field}'] = a
+                    if '{' in a[0]:
+                        list_dict = []
+                        for i in a:
+                            list_dict.append(json.loads(i))
+                        item['data'][f'{list_field}'] = list_dict
+                        
+                    else:
+                        item['data'][f'{list_field}'] = a
                 st.text(f"The {uploaded_csv.name} converted JSON file is: ")
                 st.write(bytes_data)
                 st.download_button(
@@ -351,7 +365,14 @@ if services_selected == "csv-imports":
             if list_field != '':
                 for item in bytes_data['operations']:
                     a=list(item['data'][f'{list_field}'].values())
-                    item['data'][f'{list_field}'] = a
+                    if '{' in a[0]:
+                        list_dict = []
+                        for i in a:
+                            list_dict.append(json.loads(i))
+                        item['data'][f'{list_field}'] = list_dict
+                        
+                    else:
+                        item['data'][f'{list_field}'] = a
                 st.text(f"The {uploaded_csv.name} converted JSON file is: ")
                 st.write(bytes_data)
                 json_data = json.dumps(bytes_data)
@@ -376,7 +397,14 @@ if services_selected == "csv-imports":
             if list_field != '':
                 for item in bytes_data['operations']:
                     a=list(item['data'][f'{list_field}'].values())
-                    item['data'][f'{list_field}'] = a
+                    if '{' in a[0]:
+                        list_dict = []
+                        for i in a:
+                            list_dict.append(json.loads(i))
+                        item['data'][f'{list_field}'] = list_dict
+                        
+                    else:
+                        item['data'][f'{list_field}'] = a
                 st.text(f"The {uploaded_csv.name} converted JSON file is: ")
                 st.write(bytes_data)
                 json_data = json.dumps(bytes_data)
