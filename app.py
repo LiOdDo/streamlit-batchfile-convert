@@ -17,6 +17,21 @@ import asyncio,sys
 import subprocess
 
 
+
+def test_playwright():
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            st.write("✅ Chromium launched successfully!")
+            browser.close()
+    except Exception as e:
+        st.write("❌ Playwright error:", e)
+
+
+st.title("Playwright Verification")
+test_playwright()
+
+
 # Fix Windows limitation with asyncio subprocess
 if sys.platform.startswith("win"):
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -585,5 +600,6 @@ if services_selected == "TQL-Multi-Reports-Pivot Service":
             #         token, url_input, report_metric_file)
 
     # ---SIDEBAR---
+
 
 
