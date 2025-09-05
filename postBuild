@@ -1,4 +1,2 @@
-touch postBuild
-
 #!/bin/bash
 playwright install --with-deps chromium
