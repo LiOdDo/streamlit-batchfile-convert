@@ -3,4 +3,4 @@ streamlit>=0.86.0
 openpyxl==3.0.6
 xlrd<2.0
 requests>=2.32.3
-playwright>=1.54.0
+playwright
