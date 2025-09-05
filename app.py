@@ -1,3 +1,12 @@
+import streamlit as st
+
+st.set_page_config(
+    page_title="API BETA PLAYGROUND",
+    page_icon=":rocket:",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 import pandas as pd  # pip install pandas openpyxl
 # import plotly.express as px  # pip install plotly-express
 import streamlit as st  # pip install streamlit
@@ -18,10 +27,6 @@ import subprocess
 
 
 
-
-# emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
-st.set_page_config(page_title="API BETA PLAYGROUND",
-                   page_icon=":pie_chart:", layout="wide")
 
 st.sidebar.subheader("Configuration :")
 
@@ -583,6 +588,7 @@ if services_selected == "TQL-Multi-Reports-Pivot Service":
             #         token, url_input, report_metric_file)
 
     # ---SIDEBAR---
+
 
 
 
