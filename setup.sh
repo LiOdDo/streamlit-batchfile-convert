@@ -1,3 +1,7 @@
+#!/bin/bash
+# Install Playwright browsers with dependencies
+playwright install --with-deps chromium
+
 mkdir -p ~/.streamlit/
 
 echo "\
@@ -10,4 +14,5 @@ echo "\
 headless = true\n\
 enableCORS=false\n\
 port = $PORT\n\
+
 " > ~/.streamlit/config.toml
