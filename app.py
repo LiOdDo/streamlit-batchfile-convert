@@ -13,7 +13,13 @@ from playwright.sync_api import sync_playwright
 from playwright.async_api import async_playwright
 import csv
 import re
-import asyncio
+import asyncio,sys
+import subprocess
+
+
+# Fix Windows limitation with asyncio subprocess
+if sys.platform.startswith("win"):
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="API BETA PLAYGROUND",
@@ -429,78 +435,75 @@ if services_selected == "csv-imports":
                     data = import_text(url_input, token, json_data)
                     st.text(f"The {endpoint} import result is: ")
                     st.write(data)
+
+
 if services_selected == "PDF report DOWNLOAD":
-    async def playwright_login(username, password, login_url):
-        async with async_playwright() as p:
-            browser = await p.chromium.launch(headless=True)
-            context = await browser.new_context()
-            page = await context.new_page()
-
-            await page.goto(login_url)
-            await page.fill("input#email", username)
-            await page.fill("input#password", password)
-            await page.click("button[type='submit']")
-            await page.wait_for_load_state("networkidle")
-
-            cookies = await context.cookies()
-            with open("cookies.json", "w") as f:
-                json.dump(cookies, f)
-
-            await browser.close()
-            return "✅ Cookies saved!"
     st.subheader("PDF Report Download Service - TrackTik Internal Use Only")
     st.markdown(
-        "This service will help to download bulk PDF reports by reading a csv file which contains report ids and other info. Please make sure the csv file has the following headers: id, reportname, account.name, date")
-    st.markdown(
-        "Please NOTE this service is using Playwright to login and get session cookie and then use requests to download the pdf files, so the login user must have access to all the reports you are going to download")
-    uploaded_csv = st.file_uploader(
-        "Please upload the csv file which contains report ids and other info")
+        "This service downloads bulk PDF reports using a CSV with columns: **id, reportname, account.name, date**"
+    )
+    uploaded_csv = st.file_uploader("Upload the CSV file")
+
     username = st.text_input("Enter username")
-    password = st.text_input("Enter a password", type="password")
+    password = st.text_input("Enter password", type="password")
     login_url = url_input
     report_base_url = url_input + "patrol/default/viewreportprintable/idreport/"
 
+    # ---------- LOGIN BUTTON ----------
     if st.button("Login"):
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        result = loop.run_until_complete(playwright_login(username, password, login_url))
-        st.success(result)
+        result = subprocess.run(
+            ["python", "playwright_login.py", username, password, login_url],
+            capture_output=True, text=True
+        )
+        if result.returncode == 0:
+            st.success("✅ Logged in and cookies saved!")
+        else:
+            st.error(f"❌ Login failed:\n{result.stderr}")
 
+    # ---------- FILE UPLOAD ----------
     if uploaded_csv is not None:
-        # To read file as bytes:
         report_list = pd.read_csv(uploaded_csv, dtype=str)
-        report_id = report_list['id']
-        reportname = report_list['reportname']
-        account = report_list['account']    
-        date = report_list['date']
-        
+        report_id = report_list["id"]
+        reportname = report_list["reportname"]
+        account = report_list["account.name"]
+        date = report_list["date"]
 
-    # Helper to make filenames safe
+        # Helper to make filenames safe
         def safe_filename(s):
-            return re.sub(r'[\\/*?:"<>|]', "_", s)
-        with open("cookies.json", "r") as f:
-            cookies = json.load(f)
+            return re.sub(r'[\\/*?:"<>|]', "_", str(s))
 
-            cookie_dict = {cookie['name']: cookie['value'] for cookie in cookies}
+        # Load cookies
+        try:
+            with open("cookies.json", "r") as f:
+                cookies = json.load(f)
+        except FileNotFoundError:
+            st.error("❌ Cookies not found. Please login first.")
+            st.stop()
 
-            session = requests.Session()
-            for name, value in cookie_dict.items():
-                session.cookies.set(name, value)
+        cookie_dict = {cookie["name"]: cookie["value"] for cookie in cookies}
+        session = requests.Session()
+        for name, value in cookie_dict.items():
+            session.cookies.set(name, value)
 
-            headers = {"User-Agent": "Mozilla/5.0"}
+        headers = {"User-Agent": "Mozilla/5.0"}
 
-            for i in range(len(report_id)):
-                filename = f"{safe_filename(reportname[i])}_{safe_filename(account[i])}_{safe_filename(date[i])}_({report_id[i]}).pdf"
-                pdf_url = f"{report_base_url}{report_id[i]}"
-                r = session.get(pdf_url, headers=headers)
-                if r.status_code == 200:
-                    with open(filename, "wb") as f:
-                        f.write(r.content)
-                    st.success(f"Saved {filename}")
-                else:
-                    st.error(f"Failed {report_id[i]}, status: {r.status_code}")
-                  
+        # Loop through reports
+        for i in range(len(report_id)):
+            filename = (
+                f"{safe_filename(reportname[i])}_"
+                f"{safe_filename(account[i])}_"
+                f"{safe_filename(date[i])}_({report_id[i]}).pdf"
+            )
+            pdf_url = f"{report_base_url}{report_id[i]}"
+            r = session.get(pdf_url, headers=headers)
 
+            if r.status_code == 200 and r.content.startswith(b"%PDF"):
+                with open(filename, "wb") as f:
+                    f.write(r.content)
+                st.success(f"✅ Saved {filename}")
+            else:
+                st.error(f"❌ Failed {report_id[i]}, status: {r.status_code}")
+              
 if services_selected == "TQL-Single-Report-Pivot Service":
 
     if token is not None:
@@ -582,4 +585,5 @@ if services_selected == "TQL-Multi-Reports-Pivot Service":
             #         token, url_input, report_metric_file)
 
     # ---SIDEBAR---
+
 
