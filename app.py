@@ -6,6 +6,18 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+import subprocess
+from playwright.sync_api import sync_playwright
+from playwright.async_api import async_playwright
+subprocess.run(["playwright", "install", "--with-deps", "chromium"], check=True)
+
+# Then launch browser
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)
+    page = browser.new_page()
+    page.goto("https://example.com")
+    print(page.title())
+    browser.close()
 
 import pandas as pd  # pip install pandas openpyxl
 # import plotly.express as px  # pip install plotly-express
@@ -18,12 +30,11 @@ import json
 from xlsx2json import convert_xlsx
 from csv2json import convert_csv, convert_csv_action_name
 from services_api import export_data, tql_data, import_data, import_text, single_report_export
-from playwright.sync_api import sync_playwright
-from playwright.async_api import async_playwright
+
 import csv
 import re
 import asyncio,sys
-import subprocess
+
 
 def test_playwright():
     try:
@@ -601,6 +612,7 @@ if services_selected == "TQL-Multi-Reports-Pivot Service":
             #         token, url_input, report_metric_file)
 
     # ---SIDEBAR---
+
 
 
 
