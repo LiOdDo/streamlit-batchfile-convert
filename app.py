@@ -28,22 +28,6 @@ import re
 import asyncio,sys
 
 
-def test_playwright():
-    try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)  # <-- important!
-            page = browser.new_page()
-            page.goto("https://example.com")
-            st.write("✅ Page loaded successfully:", page.title())
-            browser.close()
-    except Exception as e:
-        st.write("❌ Playwright error:", e)
-
-st.title("Playwright Verification")
-test_playwright()
-
-
-
 st.sidebar.subheader("Configuration :")
 
 
@@ -604,6 +588,7 @@ if services_selected == "TQL-Multi-Reports-Pivot Service":
             #         token, url_input, report_metric_file)
 
     # ---SIDEBAR---
+
 
 
 
