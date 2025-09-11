@@ -238,7 +238,7 @@ if services_selected == "split-csv":
                     file_name=f'{source_file.name.replace(".CSV","")}_{i}.csv',
                     mime='application/csv',
                 )
-                st.dataframe(chunk, 2000, 200)
+                #st.dataframe(chunk, 2000, 200)
 
 if services_selected == "xlsx/csv to json conversion":
     st.subheader("Batch Import File Convert Services - **_xlsx2json_**")
@@ -588,6 +588,7 @@ if services_selected == "TQL-Multi-Reports-Pivot Service":
             #         token, url_input, report_metric_file)
 
     # ---SIDEBAR---
+
 
 
 
