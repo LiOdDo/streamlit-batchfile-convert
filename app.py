@@ -7,8 +7,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 import subprocess
-from playwright.sync_api import sync_playwright
-from playwright.async_api import async_playwright
+
 
 
 import pandas as pd  # pip install pandas openpyxl
@@ -66,7 +65,7 @@ tql_endpoint_options = tql_options['tql_resource']
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
-    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "split-csv", "xlsx/csv to json conversion", "json-imports", "csv-imports", "PDF report DOWNLOAD", "TQL-Single-Report-Pivot Service", "TQL-Multi-Reports-Pivot Service"])
+    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "split-csv", "xlsx/csv to json conversion", "json-imports", "csv-imports", "TQL-Single-Report-Pivot Service", "TQL-Multi-Reports-Pivot Service"])
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
@@ -440,72 +439,6 @@ if services_selected == "csv-imports":
                     st.write(data)
 
 
-if services_selected == "PDF report DOWNLOAD":
-    st.subheader("PDF Report Download Service - TrackTik Internal Use Only")
-    st.markdown(
-        "This service downloads bulk PDF reports using a CSV with columns: **id, reportname, account.name, date**"
-    )
-    uploaded_csv = st.file_uploader("Upload the CSV file")
-
-    username = st.text_input("Enter username")
-    password = st.text_input("Enter password", type="password")
-    login_url = url_input
-    report_base_url = url_input + "patrol/default/viewreportprintable/idreport/"
-
-    # ---------- LOGIN BUTTON ----------
-    if st.button("Login"):
-        result = subprocess.run(
-            ["python", "playwright_login.py", username, password, login_url],
-            capture_output=True, text=True
-        )
-        if result.returncode == 0:
-            st.success("✅ Logged in and cookies saved!")
-        else:
-            st.error(f"❌ Login failed:\n{result.stderr}")
-
-    # ---------- FILE UPLOAD ----------
-    if uploaded_csv is not None:
-        report_list = pd.read_csv(uploaded_csv, dtype=str)
-        report_id = report_list["id"]
-        reportname = report_list["reportname"]
-        account = report_list["account.name"]
-        date = report_list["date"]
-
-        # Helper to make filenames safe
-        def safe_filename(s):
-            return re.sub(r'[\\/*?:"<>|]', "_", str(s))
-
-        # Load cookies
-        try:
-            with open("cookies.json", "r") as f:
-                cookies = json.load(f)
-        except FileNotFoundError:
-            st.error("❌ Cookies not found. Please login first.")
-            st.stop()
-
-        cookie_dict = {cookie["name"]: cookie["value"] for cookie in cookies}
-        session = requests.Session()
-        for name, value in cookie_dict.items():
-            session.cookies.set(name, value)
-
-        headers = {"User-Agent": "Mozilla/5.0"}
-
-        # Loop through reports
-        for i in range(len(report_id)):
-            filename = (
-                f"{safe_filename(reportname[i])}_"
-                f"{safe_filename(account[i])}_"
-                f"{safe_filename(date[i])}_({report_id[i]}).pdf"
-            )
-            pdf_url = f"{report_base_url}{report_id[i]}"
-            r = session.get(pdf_url, headers=headers)
-
-            if r.status_code == 200 and r.content.startswith(b"%PDF"):
-                with open(filename, "wb") as f:
-                    f.write(r.content)
-                st.success(f"✅ Saved {filename}")
-            else:
-                st.error(f"❌ Failed {report_id[i]}, status: {r.status_code}")
               
 if services_selected == "TQL-Single-Report-Pivot Service":
 
@@ -588,6 +521,7 @@ if services_selected == "TQL-Multi-Reports-Pivot Service":
             #         token, url_input, report_metric_file)
 
     # ---SIDEBAR---
+
 
 
 
