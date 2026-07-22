@@ -20,7 +20,7 @@ import json
 #import sessionState
 from xlsx2json import convert_xlsx
 from csv2json import convert_csv, convert_csv_action_name
-from services_api import export_data, tql_data, import_data, import_text, single_report_export
+from services_api import export_data, tql_data, import_data, import_text, import_batch_chunk,single_report_export
 
 import csv
 import re
@@ -65,7 +65,7 @@ tql_endpoint_options = tql_options['tql_resource']
 st.sidebar.subheader("Select Data Service:")
 
 services_selected = st.sidebar.radio(
-    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "split-csv", "xlsx/csv to json conversion", "json-imports", "csv-imports", "TQL-Single-Report-Pivot Service", "TQL-Multi-Reports-Pivot Service"])
+    "Please select one from followings", ["intro", "data exports", "TQL", "TQL Table Join Service", "split-csv","split & import batch json", "xlsx/csv to json conversion", "json-imports", "csv-imports", "TQL-Single-Report-Pivot Service", "TQL-Multi-Reports-Pivot Service"])
 # 'account.region=2&serviceModel=DISPATCH_SERVICE_MODEL'
 
 if services_selected == "intro":
@@ -238,6 +238,78 @@ if services_selected == "split-csv":
                     mime='application/csv',
                 )
                 #st.dataframe(chunk, 2000, 200)
+
+if services_selected == "split & import batch json":
+    st.subheader("Split & Import Batch JSON Service")
+    st.markdown(
+        "Upload a large batch JSON file, split its `operations` into smaller chunks (each in valid batch/file format), "
+        "then either download the chunks or import them all and collect every response for download."
+    )
+
+    file_to_split = st.file_uploader("Upload batch JSON file (.json)", type=["json"])
+    splitsize = st.number_input("Operations per chunk", min_value=1, value=100, step=10)
+
+    mode = st.radio(
+        "Mode",
+        ["Split only — download chunk files", "Split + Import + Collect all responses"]
+    )
+
+    if file_to_split is not None:
+        batch_data = json.load(file_to_split)
+        operations = batch_data.get("operations", [])
+        on_failure = batch_data.get("onFailure", "ABORT")
+
+        total_ops = len(operations)
+        chunks = [operations[i:i+int(splitsize)] for i in range(0, total_ops, int(splitsize))]
+        st.info(f"Total operations: **{total_ops}** → **{len(chunks)}** chunk(s) of up to **{int(splitsize)}** each")
+
+        if mode == "Split only — download chunk files":
+            for i, chunk in enumerate(chunks):
+                chunk_payload = {"onFailure": on_failure, "operations": chunk}
+                base_name = file_to_split.name.replace(".json", "")
+                st.download_button(
+                    label=f"Download chunk {i+1}/{len(chunks)}  ({len(chunk)} ops)",
+                    data=json.dumps(chunk_payload, indent=2, ensure_ascii=False),
+                    file_name=f"{base_name}_chunk{i+1}.json",
+                    mime="application/json",
+                    key=f"split_dl_{i}"
+                )
+
+        if mode == "Split + Import + Collect all responses":
+            submit = st.button("Import All Chunks & Collect Responses")
+            if submit:
+                all_responses = []
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+
+                for i, chunk in enumerate(chunks):
+                    chunk_payload = {"onFailure": on_failure, "operations": chunk}
+                    status_text.text(f"Importing chunk {i+1}/{len(chunks)} ({len(chunk)} ops)...")
+
+                    try:
+                        resp = import_batch_chunk(url_input, token, chunk_payload)
+                    except Exception as e:
+                        resp = {"error": str(e)}
+
+                    all_responses.append({
+                        "chunk": i + 1,
+                        "operations_count": len(chunk),
+                        "response": resp
+                    })
+                    progress_bar.progress((i + 1) / len(chunks))
+                    time.sleep(0.3)  # light throttle to avoid hammering the server
+
+                status_text.text(f"Done — {len(chunks)} chunk(s) imported.")
+
+                st.write(all_responses)
+
+                base_name = file_to_split.name.replace(".json", "")
+                st.download_button(
+                    label="Download all responses as JSON",
+                    data=json.dumps(all_responses, indent=2, ensure_ascii=False),
+                    file_name=f"{base_name}_all_responses.json",
+                    mime="application/json"
+                )
 
 if services_selected == "xlsx/csv to json conversion":
     st.subheader("Batch Import File Convert Services - **_xlsx2json_**")
